@@ -27,6 +27,10 @@ class RenderTarget implements ITargetable{
 		clear();
 	}
 
+	public inline function activate(){
+		gl.bindFramebuffer(gl.FRAMEBUFFER, frameBufferObject);
+	}
+
 	public inline function clear(){
 		gl.bindFramebuffer(gl.FRAMEBUFFER, frameBufferObject);
 		//clear white

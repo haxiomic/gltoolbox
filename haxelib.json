@@ -1,9 +1,9 @@
 {
-  "name": "gltrove",
-  "url": "",
+  "name": "gltoolbox",
+  "url": "https://github.com/haxiomic/GLToolbox",
   "license": "MIT",
   "tags": [],
-  "description": "OpenGL utilities and snippets",
+  "description": "OpenGL utilities for lime",
   "version": "0.0.1",
   "releasenote": "",
 }

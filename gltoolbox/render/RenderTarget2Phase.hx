@@ -34,6 +34,10 @@ class RenderTarget2Phase implements ITargetable{
 		clear();
 	}
 
+	public inline function activate(){
+		gl.bindFramebuffer(gl.FRAMEBUFFER, writeFrameBufferObject);
+	}
+
 	var tmpFBO:GLFramebuffer;
 	var tmpTex:GLTexture;
 	public inline function swap(){
