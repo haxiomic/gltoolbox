@@ -5,14 +5,24 @@ import lime.graphics.GLRenderContext;
 import lime.graphics.opengl.GLTexture;
 
 class TextureTools{
-	static public inline function FloatTextureFactoryRGB(
+	static public inline function customTextureFactory(
+		?channelType:Int,
+		?dataType:Int,
+		?filter:Int,
+		?unpackAlignment:Int):GLRenderContext->Int->Int->GLTexture{
+		return function (gl:GLRenderContext, width:Int, height:Int){
+			return textureFactory(gl, width, height, channelType, dataType, filter, unpackAlignment);
+		}
+	}
+
+	static public inline function floatTextureFactoryRGB(
 		gl:GLRenderContext,
 		width:Int,
 		height:Int):GLTexture{
 		return textureFactory(gl, width, height, gl.RGB, gl.FLOAT);
 	}
 
-	static public inline function FloatTextureFactoryRGBA(
+	static public inline function floatTextureFactoryRGBA(
 		gl:GLRenderContext,
 		width:Int,
 		height:Int):GLTexture{
