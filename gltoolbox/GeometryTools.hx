@@ -16,7 +16,8 @@ class GeometryTools{
         originY:Float = 0,
         width:Float   = 1,
         height:Float  = 1,
-        drawMode:Int  = GL.TRIANGLE_STRIP):GLBuffer{
+        drawMode:Int  = GL.TRIANGLE_STRIP,
+        usage:Int     = GL.STATIC_DRAW):GLBuffer{
         var quad = gl.createBuffer();
         var vertices = new Array<Float>();
         switch (drawMode) {
@@ -46,8 +47,37 @@ class GeometryTools{
                 ];
         }
         gl.bindBuffer(gl.ARRAY_BUFFER, quad);
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), usage);
         gl.bindBuffer(gl.ARRAY_BUFFER, null);
         return quad;
     }
+
+    /*  
+    *   OpenGL line drawing
+    *   +--X--+-----+-----+
+    *   |  '  |     |     |
+    *   O---->---->---->--X
+    *   |  '  |     |     |
+    *   +--^--+-----+-----+
+    *   |  '  |     |     |
+    *   |  ^  |     |     |
+    *   |  '  |     |     |
+    *   +--O--+-----+-----+
+    */
+    static public function boundaryLinesArray(width:Int, height:Int)return new Float32Array(//OGL centers lines on the boundary between pixels
+        [
+         //left
+         0.5       , 0,
+         0.5       , height,
+         //top
+         0         , height-0.5,
+         width     , height-0.5,
+         //right
+         width-0.5 , height,
+         width-0.5 , 0,
+         //bottom
+         width     , 0.5,
+         0         , 0.5
+        ]
+    );
 }
