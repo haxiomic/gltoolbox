@@ -6,11 +6,33 @@ import lime.graphics.opengl.GLBuffer;
 import lime.utils.Float32Array;
 
 class GeometryTools{
-    static public inline function createClipSpaceQuad(gl:GLRenderContext, drawMode:Int = GL.TRIANGLE_STRIP):GLBuffer{
-        return createQuad(gl, -1, -1, 1, 1, drawMode);
+    static var textureQuadCache = new Map<Int,GLBuffer>();
+    static public function getCachedTextureQuad(gl:GLRenderContext, drawMode:Int = GL.TRIANGLE_STRIP){
+        var textureQuad = textureQuadCache.get(drawMode);
+        if(textureQuad == null || !gl.isBuffer(textureQuad)){
+            textureQuad = createTextureQuad(gl, drawMode);
+            textureQuadCache.set(drawMode, textureQuad);
+        }
+        return textureQuad;
     }
 
-    static public inline function createQuad(
+    static var clipSpaceQuadCache = new Map<Int,GLBuffer>();
+    static public function getCachedClipSpaceQuad(gl:GLRenderContext, drawMode:Int = GL.TRIANGLE_STRIP){
+        var clipSpaceQuad = clipSpaceQuadCache.get(drawMode);
+        if(clipSpaceQuad == null || !gl.isBuffer(clipSpaceQuad)){
+            clipSpaceQuad = createClipSpaceQuad(gl, drawMode);
+            clipSpaceQuadCache.set(drawMode, clipSpaceQuad);
+        }
+        return clipSpaceQuad;
+    }
+
+    static public inline function createTextureQuad(gl:GLRenderContext, drawMode:Int = GL.TRIANGLE_STRIP):GLBuffer
+        return createQuad(gl, 0, 0, 1, 1, drawMode);
+
+    static public inline function createClipSpaceQuad(gl:GLRenderContext, drawMode:Int = GL.TRIANGLE_STRIP):GLBuffer
+        return createQuad(gl, -1, -1, 1, 1, drawMode);
+
+    static public function createQuad(
         gl:GLRenderContext, 
         originX:Float = 0,
         originY:Float = 0,
