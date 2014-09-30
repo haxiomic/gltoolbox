@@ -1,46 +1,49 @@
 package gltoolbox;
 
+#if snow
+import snow.render.opengl.GL;
+import snow.utils.Float32Array;
+#elseif lime
 import lime.graphics.opengl.GL;
-import lime.graphics.GLRenderContext;
 import lime.graphics.opengl.GLBuffer;
 import lime.utils.Float32Array;
+#end
 
 class GeometryTools{
     static var textureQuadCache = new Map<Int,GLBuffer>();
-    static public function getCachedTextureQuad(gl:GLRenderContext, drawMode:Int = GL.TRIANGLE_STRIP){
+    static public function getCachedTextureQuad(drawMode:Int = GL.TRIANGLE_STRIP){
         var textureQuad = textureQuadCache.get(drawMode);
-        if(textureQuad == null || !gl.isBuffer(textureQuad)){
-            textureQuad = createTextureQuad(gl, drawMode);
+        if(textureQuad == null || !GL.isBuffer(textureQuad)){
+            textureQuad = createTextureQuad(drawMode);
             textureQuadCache.set(drawMode, textureQuad);
         }
         return textureQuad;
     }
 
     static var clipSpaceQuadCache = new Map<Int,GLBuffer>();
-    static public function getCachedClipSpaceQuad(gl:GLRenderContext, drawMode:Int = GL.TRIANGLE_STRIP){
+    static public function getCachedClipSpaceQuad(drawMode:Int = GL.TRIANGLE_STRIP){
         var clipSpaceQuad = clipSpaceQuadCache.get(drawMode);
-        if(clipSpaceQuad == null || !gl.isBuffer(clipSpaceQuad)){
-            clipSpaceQuad = createClipSpaceQuad(gl, drawMode);
+        if(clipSpaceQuad == null || !GL.isBuffer(clipSpaceQuad)){
+            clipSpaceQuad = createClipSpaceQuad(drawMode);
             clipSpaceQuadCache.set(drawMode, clipSpaceQuad);
         }
         return clipSpaceQuad;
     }
 
-    static public inline function createTextureQuad(gl:GLRenderContext, drawMode:Int = GL.TRIANGLE_STRIP):GLBuffer
-        return createQuad(gl, 0, 0, 1, 1, drawMode);
+    static public inline function createTextureQuad(drawMode:Int = GL.TRIANGLE_STRIP):GLBuffer
+        return createQuad(0, 0, 1, 1, drawMode);
 
-    static public inline function createClipSpaceQuad(gl:GLRenderContext, drawMode:Int = GL.TRIANGLE_STRIP):GLBuffer
-        return createQuad(gl, -1, -1, 1, 1, drawMode);
+    static public inline function createClipSpaceQuad(drawMode:Int = GL.TRIANGLE_STRIP):GLBuffer
+        return createQuad(-1, -1, 2, 2, drawMode);
 
     static public function createQuad(
-        gl:GLRenderContext, 
         originX:Float = 0,
         originY:Float = 0,
         width:Float   = 1,
         height:Float  = 1,
         drawMode:Int  = GL.TRIANGLE_STRIP,
         usage:Int     = GL.STATIC_DRAW):GLBuffer{
-        var quad = gl.createBuffer();
+        var quad = GL.createBuffer();
         var vertices = new Array<Float>();
         switch (drawMode) {
             case GL.TRIANGLE_STRIP, GL.TRIANGLES:
@@ -68,9 +71,9 @@ class GeometryTools{
                     //by default, anti-clockwise triangles are front-facing 
                 ];
         }
-        gl.bindBuffer(gl.ARRAY_BUFFER, quad);
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), usage);
-        gl.bindBuffer(gl.ARRAY_BUFFER, null);
+        GL.bindBuffer(GL.ARRAY_BUFFER, quad);
+        GL.bufferData(GL.ARRAY_BUFFER, new Float32Array(vertices), usage);
+        GL.bindBuffer(GL.ARRAY_BUFFER, null);
         return quad;
     }
 

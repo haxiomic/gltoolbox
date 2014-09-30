@@ -1,14 +1,17 @@
 package gltoolbox.render;
 
-import lime.graphics.GLRenderContext;
+#if snow
+import snow.render.opengl.GL;
+#elseif lime
 import lime.graphics.opengl.GLBuffer;
 import lime.graphics.opengl.GLFramebuffer;
 import lime.graphics.opengl.GLTexture;
 import lime.graphics.opengl.GL;
+#end 
+
 import shaderblox.ShaderBase;
 
 class RenderTarget2Phase implements ITargetable{
-	var gl:GLRenderContext;
 	public var width 			 (default, null):Int;
 	public var height 			 (default, null):Int;
 	public var writeFrameBufferObject (default, null):GLFramebuffer;
@@ -16,53 +19,52 @@ class RenderTarget2Phase implements ITargetable{
 	public var readFrameBufferObject  (default, null):GLFramebuffer;
 	public var readFromTexture        (default, null):GLTexture;
 
-	var textureFactory:GLRenderContext->Int->Int->GLTexture;
+	var textureFactory:Int->Int->GLTexture;
 
-	public inline function new(gl:GLRenderContext, textureFactory:GLRenderContext->Int->Int->GLTexture, width:Int, height:Int){
-		this.gl = gl;
+	public inline function new(textureFactory:Int->Int->GLTexture, width:Int, height:Int){
 		this.width = width;
 		this.height = height;
 		this.textureFactory = textureFactory;
 
 		if(textureQuad == null)
-			textureQuad = gltoolbox.GeometryTools.getCachedTextureQuad(gl, gl.TRIANGLE_STRIP);
+			textureQuad = gltoolbox.GeometryTools.getCachedTextureQuad(GL.TRIANGLE_STRIP);
 
-		this.writeFrameBufferObject = gl.createFramebuffer();
-		this.readFrameBufferObject  = gl.createFramebuffer();
+		this.writeFrameBufferObject = GL.createFramebuffer();
+		this.readFrameBufferObject  = GL.createFramebuffer();
 
 		resize(width, height);
 	}
 
 	public function resize(width:Int, height:Int):ITargetable{
-		var newWriteToTexture  = textureFactory(gl, width, height);
-		var newReadFromTexture = textureFactory(gl, width, height);
+		var newWriteToTexture  = textureFactory(width, height);
+		var newReadFromTexture = textureFactory(width, height);
 
 		//attach texture to frame buffer object's color component
-		gl.bindFramebuffer(gl.FRAMEBUFFER, this.writeFrameBufferObject);
-		gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, newWriteToTexture, 0);
+		GL.bindFramebuffer(GL.FRAMEBUFFER, this.writeFrameBufferObject);
+		GL.framebufferTexture2D(GL.FRAMEBUFFER, GL.COLOR_ATTACHMENT0, GL.TEXTURE_2D, newWriteToTexture, 0);
 
 		//attach texture to frame buffer object's color component
-		gl.bindFramebuffer(gl.FRAMEBUFFER, this.readFrameBufferObject);
-		gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, newReadFromTexture, 0);
+		GL.bindFramebuffer(GL.FRAMEBUFFER, this.readFrameBufferObject);
+		GL.framebufferTexture2D(GL.FRAMEBUFFER, GL.COLOR_ATTACHMENT0, GL.TEXTURE_2D, newReadFromTexture, 0);
 
 		if(this.readFromTexture != null){
 			var resampler = gltoolbox.shaders.Resample.instance;
 			resampler.texture.data = this.readFromTexture;
 
-			gl.bindFramebuffer(gl.FRAMEBUFFER, readFrameBufferObject);
-			gl.viewport(0, 0, width, height);
+			GL.bindFramebuffer(GL.FRAMEBUFFER, readFrameBufferObject);
+			GL.viewport(0, 0, width, height);
 
-			gl.bindBuffer(gl.ARRAY_BUFFER, textureQuad);
+			GL.bindBuffer(GL.ARRAY_BUFFER, textureQuad);
 
 			resampler.activate(true, true);
-			gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+			GL.drawArrays(GL.TRIANGLE_STRIP, 0, 4);
 			resampler.deactivate();
 
-			gl.deleteTexture(this.readFromTexture);
+			GL.deleteTexture(this.readFromTexture);
 		}else clearRead();
 
 		if(this.writeToTexture != null)
-			gl.deleteTexture(this.writeToTexture);	
+			GL.deleteTexture(this.writeToTexture);	
 		else clearWrite();
 
 		this.width = width;
@@ -74,7 +76,7 @@ class RenderTarget2Phase implements ITargetable{
 	}
 
 	public inline function activate(){
-		gl.bindFramebuffer(gl.FRAMEBUFFER, writeFrameBufferObject);
+		GL.bindFramebuffer(GL.FRAMEBUFFER, writeFrameBufferObject);
 	}
 
 	var tmpFBO:GLFramebuffer;
@@ -95,22 +97,22 @@ class RenderTarget2Phase implements ITargetable{
 	}
 
 	public inline function clearRead(mask:Int = GL.COLOR_BUFFER_BIT){
-		gl.bindFramebuffer(gl.FRAMEBUFFER, readFrameBufferObject);
-		gl.clearColor (0, 0, 0, 1);
-		gl.clear (mask);
+		GL.bindFramebuffer(GL.FRAMEBUFFER, readFrameBufferObject);
+		GL.clearColor (0, 0, 0, 1);
+		GL.clear (mask);
 	}
 
 	public inline function clearWrite(mask:Int = GL.COLOR_BUFFER_BIT){
-		gl.bindFramebuffer(gl.FRAMEBUFFER, writeFrameBufferObject);
-		gl.clearColor (0, 0, 0, 1);
-		gl.clear (mask);
+		GL.bindFramebuffer(GL.FRAMEBUFFER, writeFrameBufferObject);
+		GL.clearColor (0, 0, 0, 1);
+		GL.clear (mask);
 	}
 
 	public inline function dispose(){
-		gl.deleteFramebuffer(writeFrameBufferObject);
-		gl.deleteFramebuffer(readFrameBufferObject);
-		gl.deleteTexture(writeToTexture);
-		gl.deleteTexture(readFromTexture);
+		GL.deleteFramebuffer(writeFrameBufferObject);
+		GL.deleteFramebuffer(readFrameBufferObject);
+		GL.deleteTexture(writeToTexture);
+		GL.deleteTexture(readFromTexture);
 	}
 
 	static var textureQuad:GLBuffer;

@@ -1,10 +1,12 @@
 package gltoolbox.render;
 
-import lime.graphics.GLRenderContext;
+#if snow
+import snow.render.opengl.GL;
+#elseif lime
 import lime.graphics.opengl.GL;
+#end
 
 interface ITargetable{
-	private var gl(default, null):GLRenderContext;
 	public var width(default, null):Int;
 	public var height(default, null):Int;
 	public function activate():Void;

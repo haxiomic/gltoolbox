@@ -1,36 +1,36 @@
 package gltoolbox;
 
+#if snow
+import snow.render.opengl.GL;
+#elseif lime
 import lime.graphics.opengl.GL;
-import lime.graphics.GLRenderContext;
 import lime.graphics.opengl.GLTexture;
+#end
 
 class TextureTools{
 	static public inline function customTextureFactory(
 		?channelType:Int,
 		?dataType:Int,
 		?filter:Int,
-		?unpackAlignment:Int):GLRenderContext->Int->Int->GLTexture{
-		return function (gl:GLRenderContext, width:Int, height:Int){
-			return textureFactory(gl, width, height, channelType, dataType, filter, unpackAlignment);
+		?unpackAlignment:Int):Int->Int->GLTexture{
+		return function (width:Int, height:Int){
+			return textureFactory(width, height, channelType, dataType, filter, unpackAlignment);
 		}
 	}
 
 	static public inline function floatTextureFactoryRGB(
-		gl:GLRenderContext,
 		width:Int,
 		height:Int):GLTexture{
-		return textureFactory(gl, width, height, gl.RGB, gl.FLOAT);
+		return textureFactory(width, height, GL.RGB, GL.FLOAT);
 	}
 
 	static public inline function floatTextureFactoryRGBA(
-		gl:GLRenderContext,
 		width:Int,
 		height:Int):GLTexture{
-		return textureFactory(gl, width, height, gl.RGBA, gl.FLOAT);
+		return textureFactory(width, height, GL.RGBA, GL.FLOAT);
 	}
 
 	static public inline function textureFactory(
-		gl:GLRenderContext,
 		width:Int,
 		height:Int,
 		channelType:Int     = GL.RGBA,
@@ -38,22 +38,22 @@ class TextureTools{
 		filter:Int          = GL.NEAREST,
 		unpackAlignment:Int = 4):GLTexture{
 
-		var texture:GLTexture = gl.createTexture();
-		gl.bindTexture (gl.TEXTURE_2D, texture);
+		var texture:GLTexture = GL.createTexture();
+		GL.bindTexture (GL.TEXTURE_2D, texture);
 
 		//set params
-		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, filter); 
-		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, filter); 
-		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_MIN_FILTER, filter); 
+		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_MAG_FILTER, filter); 
+		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_WRAP_S, GL.CLAMP_TO_EDGE);
+		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_WRAP_T, GL.CLAMP_TO_EDGE);
 
-		gl.pixelStorei(gl.UNPACK_ALIGNMENT, 4); //see (see http://www.khronos.org/opengles/sdk/docs/man/xhtml/glPixelStorei.xml)
+		GL.pixelStorei(GL.UNPACK_ALIGNMENT, 4); //see (see http://www.khronos.org/opengles/sdk/docs/man/xhtml/glPixelStorei.xml)
 
 		//set data
-		gl.texImage2D (gl.TEXTURE_2D, 0, channelType, width, height, 0, channelType, dataType, null);
+		GL.texImage2D (GL.TEXTURE_2D, 0, channelType, width, height, 0, channelType, dataType, null);
 
 		//unbind
-		gl.bindTexture(gl.TEXTURE_2D, null);
+		GL.bindTexture(GL.TEXTURE_2D, null);
 		return texture;
 	}
 }
