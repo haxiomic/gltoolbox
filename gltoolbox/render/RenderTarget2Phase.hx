@@ -21,7 +21,8 @@ class RenderTarget2Phase implements ITargetable{
 
 	var textureFactory:Int->Int->GLTexture;
 
-	public inline function new(textureFactory:Int->Int->GLTexture, width:Int, height:Int){
+	public inline function new(width:Int, height:Int, ?textureFactory:Int->Int->GLTexture){
+		if(textureFactory == null) textureFactory = gltoolbox.TextureTools.createTextureFactory();
 		this.width = width;
 		this.height = height;
 		this.textureFactory = textureFactory;

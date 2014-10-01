@@ -8,11 +8,11 @@ import lime.graphics.opengl.GLTexture;
 #end
 
 class TextureTools{
-	static public inline function customTextureFactory(
-		?channelType:Int,
-		?dataType:Int,
-		?filter:Int,
-		?unpackAlignment:Int):Int->Int->GLTexture{
+	static public inline function createTextureFactory(
+		?channelType:Int     = GL.RGBA,
+		?dataType:Int        = GL.UNSIGNED_BYTE,
+		?filter:Int          = GL.NEAREST,
+		?unpackAlignment:Int = 4):Int->Int->GLTexture{
 		return function (width:Int, height:Int){
 			return textureFactory(width, height, channelType, dataType, filter, unpackAlignment);
 		}
