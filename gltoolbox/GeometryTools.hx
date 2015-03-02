@@ -2,7 +2,7 @@ package gltoolbox;
 
 #if snow
 import snow.render.opengl.GL;
-import snow.utils.Float32Array;
+import snow.io.typedarray.Float32Array;
 #elseif lime
 import lime.graphics.opengl.GL;
 import lime.graphics.opengl.GLBuffer;

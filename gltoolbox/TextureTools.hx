@@ -30,6 +30,7 @@ class TextureTools{
 		return textureFactory(width, height, GL.RGBA, GL.FLOAT);
 	}
 
+	@:noStack
 	static public inline function textureFactory(
 		width:Int,
 		height:Int,
@@ -37,6 +38,13 @@ class TextureTools{
 		dataType:Int        = GL.UNSIGNED_BYTE,
 		filter:Int          = GL.NEAREST,
 		unpackAlignment:Int = 4):GLTexture{
+
+		#if ios //#! temporary test
+		if(dataType == GL.FLOAT){
+			// trace('GL.FLOAT is not supported, changing to half float');
+			dataType = 0x8D61;//GL_HALF_FLOAT_OES
+		}
+		#end
 
 		var texture:GLTexture = GL.createTexture();
 		GL.bindTexture (GL.TEXTURE_2D, texture);
@@ -50,10 +58,11 @@ class TextureTools{
 		GL.pixelStorei(GL.UNPACK_ALIGNMENT, 4); //see (see http://www.khronos.org/opengles/sdk/docs/man/xhtml/glPixelStorei.xml)
 
 		//set data
-		GL.texImage2D (GL.TEXTURE_2D, 0, channelType, width, height, 0, channelType, dataType, null);
+		GL.texImage2D(GL.TEXTURE_2D, 0, channelType, width, height, 0, channelType, dataType, null);
 
 		//unbind
 		GL.bindTexture(GL.TEXTURE_2D, null);
+
 		return texture;
 	}
 }
