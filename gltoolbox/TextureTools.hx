@@ -1,7 +1,7 @@
 package gltoolbox;
 
 #if snow
-import snow.render.opengl.GL;
+import snow.modules.opengl.GL;
 #elseif lime
 import lime.graphics.opengl.GL;
 import lime.graphics.opengl.GLTexture;
@@ -14,24 +14,23 @@ class TextureTools{
 		?filter:Int          = GL.NEAREST,
 		?unpackAlignment:Int = 4):Int->Int->GLTexture{
 		return function (width:Int, height:Int){
-			return textureFactory(width, height, channelType, dataType, filter, unpackAlignment);
+			return createTexture(width, height, channelType, dataType, filter, unpackAlignment);
 		}
 	}
 
-	static public inline function floatTextureFactoryRGB(
+	static public inline function createFloatTextureRGB(
 		width:Int,
 		height:Int):GLTexture{
-		return textureFactory(width, height, GL.RGB, GL.FLOAT);
+		return createTexture(width, height, GL.RGB, GL.FLOAT);
 	}
 
-	static public inline function floatTextureFactoryRGBA(
+	static public inline function createFloatTextureRGBA(
 		width:Int,
 		height:Int):GLTexture{
-		return textureFactory(width, height, GL.RGBA, GL.FLOAT);
+		return createTexture(width, height, GL.RGBA, GL.FLOAT);
 	}
 
-	@:noStack
-	static public inline function textureFactory(
+	static public inline function createTexture(
 		width:Int,
 		height:Int,
 		channelType:Int     = GL.RGBA,

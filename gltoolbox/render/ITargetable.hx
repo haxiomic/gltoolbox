@@ -1,7 +1,7 @@
 package gltoolbox.render;
 
 #if snow
-import snow.render.opengl.GL;
+import snow.modules.opengl.GL;
 #elseif lime
 import lime.graphics.opengl.GL;
 #end

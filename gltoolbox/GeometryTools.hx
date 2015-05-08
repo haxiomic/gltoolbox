@@ -1,8 +1,8 @@
 package gltoolbox;
 
 #if snow
-import snow.render.opengl.GL;
-import snow.io.typedarray.Float32Array;
+import snow.modules.opengl.GL;
+import snow.api.buffers.Float32Array;
 #elseif lime
 import lime.graphics.opengl.GL;
 import lime.graphics.opengl.GLBuffer;
@@ -10,14 +10,14 @@ import lime.utils.Float32Array;
 #end
 
 class GeometryTools{
-    static var textureQuadCache = new Map<Int,GLBuffer>();
-    static public function getCachedTextureQuad(drawMode:Int = GL.TRIANGLE_STRIP){
-        var textureQuad = textureQuadCache.get(drawMode);
-        if(textureQuad == null || !GL.isBuffer(textureQuad)){
-            textureQuad = createTextureQuad(drawMode);
-            textureQuadCache.set(drawMode, textureQuad);
+    static var unitQuadCache = new Map<Int,GLBuffer>();
+    static public function getCachedUnitQuad(drawMode:Int = GL.TRIANGLE_STRIP){
+        var unitQuad = unitQuadCache.get(drawMode);
+        if(unitQuad == null || !GL.isBuffer(unitQuad)){
+            unitQuad = createUnitQuad(drawMode);
+            unitQuadCache.set(drawMode, unitQuad);
         }
-        return textureQuad;
+        return unitQuad;
     }
 
     static var clipSpaceQuadCache = new Map<Int,GLBuffer>();
@@ -30,7 +30,7 @@ class GeometryTools{
         return clipSpaceQuad;
     }
 
-    static public inline function createTextureQuad(drawMode:Int = GL.TRIANGLE_STRIP):GLBuffer
+    static public inline function createUnitQuad(drawMode:Int = GL.TRIANGLE_STRIP):GLBuffer
         return createQuad(0, 0, 1, 1, drawMode);
 
     static public inline function createClipSpaceQuad(drawMode:Int = GL.TRIANGLE_STRIP):GLBuffer
@@ -91,18 +91,18 @@ class GeometryTools{
     */
     static public function boundaryLinesArray(width:Int, height:Int)return new Float32Array(//OGL centers lines on the boundary between pixels
         [
-         //left
-         0.5       , 0,
-         0.5       , height,
-         //top
-         0         , height-0.5,
-         width     , height-0.5,
-         //right
-         width-0.5 , height,
-         width-0.5 , 0,
-         //bottom
-         width     , 0.5,
-         0         , 0.5
+            //left
+            0.5       , 0,
+            0.5       , height,
+            //top
+            0         , height-0.5,
+            width     , height-0.5,
+            //right
+            width-0.5 , height,
+            width-0.5 , 0,
+            //bottom
+            width     , 0.5,
+            0         , 0.5
         ]
     );
 }
