@@ -7,36 +7,55 @@ import lime.graphics.opengl.GL;
 import lime.graphics.opengl.GLTexture;
 #end
 
+typedef TextureFactory = Int->Int->GLTexture; //(width, height):GLTexture
+
+typedef TextureParams = {
+	@:optional var channelType:Int;
+	@:optional var dataType:Int;
+	@:optional var filter:Int;
+	@:optional var wrapS:Int;
+	@:optional var wrapT:Int;
+	@:optional var unpackAlignment:Int;
+}
+
 class TextureTools{
-	static public inline function createTextureFactory(
-		?channelType:Int     = GL.RGBA,
-		?dataType:Int        = GL.UNSIGNED_BYTE,
-		?filter:Int          = GL.NEAREST,
-		?unpackAlignment:Int = 4):Int->Int->GLTexture{
+
+	static public var defaultParams:TextureParams = {
+		channelType     : GL.RGBA,
+		dataType        : GL.UNSIGNED_BYTE,
+		filter          : GL.NEAREST,
+		wrapS           : GL.CLAMP_TO_EDGE,
+		wrapT           : GL.CLAMP_TO_EDGE,
+		unpackAlignment : 4
+	};
+
+	static public inline function createTextureFactory(?params:TextureParams):TextureFactory{
 		return function (width:Int, height:Int){
-			return createTexture(width, height, channelType, dataType, filter, unpackAlignment);
+			return createTexture(width, height, params);
 		}
 	}
 
-	static public inline function createFloatTextureRGB(
-		width:Int,
-		height:Int):GLTexture{
-		return createTexture(width, height, GL.RGB, GL.FLOAT);
+	static public inline function createFloatTextureRGB(width:Int, height:Int):GLTexture{
+		return createTexture(width, height, {
+			channelType: GL.RGB,
+			dataType: GL.FLOAT
+		});
 	}
 
-	static public inline function createFloatTextureRGBA(
-		width:Int,
-		height:Int):GLTexture{
-		return createTexture(width, height, GL.RGBA, GL.FLOAT);
+	static public inline function createFloatTextureRGBA(width:Int, height:Int):GLTexture{
+		return createTexture(width, height, {
+			channelType: GL.RGBA,
+			dataType: GL.FLOAT
+		});
 	}
 
-	static public inline function createTexture(
-		width:Int,
-		height:Int,
-		channelType:Int     = GL.RGBA,
-		dataType:Int        = GL.UNSIGNED_BYTE,
-		filter:Int          = GL.NEAREST,
-		unpackAlignment:Int = 4):GLTexture{
+	static public function createTexture(width:Int, height:Int, ?params:TextureParams):GLTexture{
+		if(params == null) params = {};
+
+		//extend default params
+		for(f in Reflect.fields(defaultParams))
+			if(!Reflect.hasField(params, f))
+				Reflect.setField(params, f, Reflect.field(defaultParams, f));
 
 		#if ios //#! temporary test
 		if(dataType == GL.FLOAT){
@@ -49,19 +68,20 @@ class TextureTools{
 		GL.bindTexture (GL.TEXTURE_2D, texture);
 
 		//set params
-		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_MIN_FILTER, filter); 
-		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_MAG_FILTER, filter); 
-		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_WRAP_S, GL.CLAMP_TO_EDGE);
-		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_WRAP_T, GL.CLAMP_TO_EDGE);
+		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_MIN_FILTER, params.filter); 
+		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_MAG_FILTER, params.filter); 
+		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_WRAP_S, params.wrapS);
+		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_WRAP_T, params.wrapT);
 
-		GL.pixelStorei(GL.UNPACK_ALIGNMENT, 4); //see (see http://www.khronos.org/opengles/sdk/docs/man/xhtml/glPixelStorei.xml)
+		GL.pixelStorei(GL.UNPACK_ALIGNMENT, params.unpackAlignment); //see (see http://www.khronos.org/opengles/sdk/docs/man/xhtml/glPixelStorei.xml)
 
 		//set data
-		GL.texImage2D(GL.TEXTURE_2D, 0, channelType, width, height, 0, channelType, dataType, null);
+		GL.texImage2D(GL.TEXTURE_2D, 0, params.channelType, width, height, 0, params.channelType, params.dataType, null);
 
 		//unbind
 		GL.bindTexture(GL.TEXTURE_2D, null);
 
 		return texture;
 	}
+
 }

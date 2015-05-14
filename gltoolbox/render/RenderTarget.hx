@@ -12,6 +12,7 @@ import lime.graphics.opengl.GL;
 import shaderblox.ShaderBase;
 
 class RenderTarget implements ITargetable{
+
 	public var width 			 (default, null):Int;
 	public var height 			 (default, null):Int;
 	public var frameBufferObject (default, null):GLFramebuffer;
@@ -27,7 +28,7 @@ class RenderTarget implements ITargetable{
 		this.texture = textureFactory(width, height);
 
 		if(textureQuad == null)
-			textureQuad = gltoolbox.GeometryTools.getCachedTextureQuad(GL.TRIANGLE_STRIP);
+			textureQuad = gltoolbox.GeometryTools.getCachedUnitQuad(GL.TRIANGLE_STRIP);
 
 		this.frameBufferObject = GL.createFramebuffer();
 
@@ -80,4 +81,5 @@ class RenderTarget implements ITargetable{
 	}
 
 	static var textureQuad:GLBuffer;
+	
 }

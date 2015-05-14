@@ -10,6 +10,7 @@ import lime.utils.Float32Array;
 #end
 
 class GeometryTools{
+
     static var unitQuadCache = new Map<Int,GLBuffer>();
     static public function getCachedUnitQuad(drawMode:Int = GL.TRIANGLE_STRIP){
         var unitQuad = unitQuadCache.get(drawMode);
@@ -105,4 +106,5 @@ class GeometryTools{
             0         , 0.5
         ]
     );
+    
 }

@@ -7,6 +7,7 @@ import lime.graphics.opengl.GL;
 #end
 
 class Extensions{
+	
 	//https://www.opengl.org/archives/resources/features/OGLextensions/
 	static public function isSupported(extensionName:String, dontStripPrefixes:Bool = false){
 		
