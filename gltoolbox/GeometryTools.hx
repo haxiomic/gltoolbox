@@ -12,7 +12,7 @@ import lime.utils.Float32Array;
 class GeometryTools{
 
     static var unitQuadCache = new Map<Int,GLBuffer>();
-    static public function getCachedUnitQuad(drawMode:Int = GL.TRIANGLE_STRIP){
+    static public function getCachedUnitQuad(drawMode:Int = GL.TRIANGLE_STRIP):GLBuffer{
         var unitQuad = unitQuadCache.get(drawMode);
         if(unitQuad == null || !GL.isBuffer(unitQuad)){
             unitQuad = createUnitQuad(drawMode);
@@ -22,7 +22,7 @@ class GeometryTools{
     }
 
     static var clipSpaceQuadCache = new Map<Int,GLBuffer>();
-    static public function getCachedClipSpaceQuad(drawMode:Int = GL.TRIANGLE_STRIP){
+    static public function getCachedClipSpaceQuad(drawMode:Int = GL.TRIANGLE_STRIP):GLBuffer{
         var clipSpaceQuad = clipSpaceQuadCache.get(drawMode);
         if(clipSpaceQuad == null || !GL.isBuffer(clipSpaceQuad)){
             clipSpaceQuad = createClipSpaceQuad(drawMode);
@@ -31,11 +31,13 @@ class GeometryTools{
         return clipSpaceQuad;
     }
 
-    static public inline function createUnitQuad(drawMode:Int = GL.TRIANGLE_STRIP):GLBuffer
+    static public inline function createUnitQuad(drawMode:Int = GL.TRIANGLE_STRIP):GLBuffer{
         return createQuad(0, 0, 1, 1, drawMode);
+    }
 
-    static public inline function createClipSpaceQuad(drawMode:Int = GL.TRIANGLE_STRIP):GLBuffer
+    static public inline function createClipSpaceQuad(drawMode:Int = GL.TRIANGLE_STRIP):GLBuffer{
         return createQuad(-1, -1, 2, 2, drawMode);
+    }
 
     static public function createQuad(
         originX:Float = 0,

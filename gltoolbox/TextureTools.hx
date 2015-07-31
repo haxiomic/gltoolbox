@@ -57,7 +57,7 @@ class TextureTools{
 			if(!Reflect.hasField(params, f))
 				Reflect.setField(params, f, Reflect.field(defaultParams, f));
 
-		#if ios //#! temporary test
+		#if ios //@! temporary test
 		if(dataType == GL.FLOAT){
 			// trace('GL.FLOAT is not supported, changing to half float');
 			dataType = 0x8D61;//GL_HALF_FLOAT_OES
