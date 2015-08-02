@@ -1,3 +1,9 @@
+/*
+
+    @! TODO
+    - Caching should be handled by a flag to create() and automatic
+*/
+
 package gltoolbox;
 
 #if snow

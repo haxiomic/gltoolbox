@@ -1,3 +1,8 @@
+/*
+	@! TODO
+	- if context is changed or lost and regained, we need to be careful that textureQuad is still valid
+*/
+
 package gltoolbox.render;
 
 #if snow
@@ -11,7 +16,7 @@ import lime.graphics.opengl.GL;
 
 import shaderblox.ShaderBase;
 
-class RenderTarget implements ITargetable{
+class RenderTarget implements ITarget{
 
 	public var width 			 (default, null):Int;
 	public var height 			 (default, null):Int;
@@ -21,21 +26,26 @@ class RenderTarget implements ITargetable{
 	var textureFactory:Int->Int->GLTexture;
 
 	public inline function new(width:Int, height:Int, ?textureFactory:Int->Int->GLTexture){
-		if(textureFactory == null) textureFactory = gltoolbox.TextureTools.createTextureFactory();
+		if(textureFactory == null){
+			textureFactory = gltoolbox.TextureTools.createTextureFactory();
+		}
+
+		//static texture quad (only need one on GPU)
+		if(textureQuad == null){
+			textureQuad = gltoolbox.GeometryTools.getCachedUnitQuad(GL.TRIANGLE_STRIP);
+		}
+
 		this.width = width;
 		this.height = height;
 		this.textureFactory = textureFactory;
 		this.texture = textureFactory(width, height);
-
-		if(textureQuad == null)
-			textureQuad = gltoolbox.GeometryTools.getCachedUnitQuad(GL.TRIANGLE_STRIP);
 
 		this.frameBufferObject = GL.createFramebuffer();
 
 		resize(width, height);
 	}
 
-	public inline function resize(width:Int, height:Int):ITargetable{
+	public inline function resize(width:Int, height:Int):ITarget{
 		var newTexture = textureFactory(width, height);
 		//attach texture to frame buffer object's color component	
 		GL.bindFramebuffer(GL.FRAMEBUFFER, this.frameBufferObject);

@@ -11,7 +11,7 @@ import lime.graphics.opengl.GL;
 
 import shaderblox.ShaderBase;
 
-class RenderTarget2Phase implements ITargetable{
+class RenderTarget2Phase implements ITarget{
 
 	public var width 			 (default, null):Int;
 	public var height 			 (default, null):Int;
@@ -37,7 +37,7 @@ class RenderTarget2Phase implements ITargetable{
 		resize(width, height);
 	}
 
-	public function resize(width:Int, height:Int):ITargetable{
+	public function resize(width:Int, height:Int):ITarget{
 		var newWriteToTexture  = textureFactory(width, height);
 		var newReadFromTexture = textureFactory(width, height);
 

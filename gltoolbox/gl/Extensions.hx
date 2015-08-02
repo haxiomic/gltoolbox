@@ -1,4 +1,4 @@
-package gltoolbox;
+package gltoolbox.driver;
 
 #if snow
 import snow.modules.opengl.GL;

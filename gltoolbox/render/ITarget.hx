@@ -6,10 +6,10 @@ import snow.modules.opengl.GL;
 import lime.graphics.opengl.GL;
 #end
 
-interface ITargetable{
+interface ITarget{
 	public var width(default, null):Int;
 	public var height(default, null):Int;
 	public function activate():Void;
 	public function clear(mask:Int = GL.COLOR_BUFFER_BIT):Void;
-	public function resize(width:Int, height:Int):ITargetable;
+	public function resize(width:Int, height:Int):ITarget;
 }
