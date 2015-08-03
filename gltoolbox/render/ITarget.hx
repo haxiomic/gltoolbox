@@ -1,10 +1,6 @@
 package gltoolbox.render;
 
-#if snow
-import snow.modules.opengl.GL;
-#elseif lime
-import lime.graphics.opengl.GL;
-#end
+import gltoolbox.gl.GL;
 
 interface ITarget{
 	public var width(default, null):Int;

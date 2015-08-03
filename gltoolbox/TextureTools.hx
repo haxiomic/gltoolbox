@@ -29,26 +29,6 @@ class TextureTools{
 		unpackAlignment : 4
 	};
 
-	static public inline function createTextureFactory(?params:TextureParams):TextureFactory{
-		return function (width:Int, height:Int){
-			return createTexture(width, height, params);
-		}
-	}
-
-	static public inline function createFloatTextureRGB(width:Int, height:Int):GLTexture{
-		return createTexture(width, height, {
-			channelType: GL.RGB,
-			dataType: GL.FLOAT
-		});
-	}
-
-	static public inline function createFloatTextureRGBA(width:Int, height:Int):GLTexture{
-		return createTexture(width, height, {
-			channelType: GL.RGBA,
-			dataType: GL.FLOAT
-		});
-	}
-
 	static public function createTexture(width:Int, height:Int, ?params:TextureParams):GLTexture{
 		if(params == null) params = {};
 
@@ -73,7 +53,7 @@ class TextureTools{
 		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_WRAP_S, params.wrapS);
 		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_WRAP_T, params.wrapT);
 
-		GL.pixelStorei(GL.UNPACK_ALIGNMENT, params.unpackAlignment); //see (see http://www.khronos.org/opengles/sdk/docs/man/xhtml/glPixelStorei.xml)
+		GL.pixelStorei(GL.UNPACK_ALIGNMENT, params.unpackAlignment); //see http://www.khronos.org/opengles/sdk/docs/man/xhtml/glPixelStorei.xml
 
 		//set data
 		GL.texImage2D(GL.TEXTURE_2D, 0, params.channelType, width, height, 0, params.channelType, params.dataType, null);
@@ -84,4 +64,23 @@ class TextureTools{
 		return texture;
 	}
 
+	static public inline function createTextureFactory(?params:TextureParams):TextureFactory{
+		return function (width:Int, height:Int){
+			return createTexture(width, height, params);
+		}
+	}
+
+	static public inline function createFloatTextureRGB(width:Int, height:Int):GLTexture{
+		return createTexture(width, height, {
+			channelType: GL.RGB,
+			dataType: GL.FLOAT
+		});
+	}
+
+	static public inline function createFloatTextureRGBA(width:Int, height:Int):GLTexture{
+		return createTexture(width, height, {
+			channelType: GL.RGBA,
+			dataType: GL.FLOAT
+		});
+	}
 }

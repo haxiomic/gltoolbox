@@ -15,6 +15,8 @@ A collection of utilities to slim down the process of writing haxe-based OpenGL 
 - Scene graph
 - Modular shaders
 
+? Text renderering
+
 
 -------
 

@@ -1,13 +1,9 @@
 package gltoolbox.render;
 
-#if snow
-import snow.modules.opengl.GL;
-#elseif lime
-import lime.graphics.opengl.GLBuffer;
-import lime.graphics.opengl.GLFramebuffer;
-import lime.graphics.opengl.GLTexture;
-import lime.graphics.opengl.GL;
-#end 
+import gltoolbox.gl.GLBuffer;
+import gltoolbox.gl.GLFramebuffer;
+import gltoolbox.gl.GLTexture;
+import gltoolbox.gl.GL;
 
 import shaderblox.ShaderBase;
 
@@ -100,14 +96,14 @@ class RenderTarget2Phase implements ITarget{
 
 	public inline function clearRead(mask:Int = GL.COLOR_BUFFER_BIT){
 		GL.bindFramebuffer(GL.FRAMEBUFFER, readFrameBufferObject);
-		GL.clearColor (0, 0, 0, 1);
-		GL.clear (mask);
+		GL.clearColor(0, 0, 0, 1);
+		GL.clear(mask);
 	}
 
 	public inline function clearWrite(mask:Int = GL.COLOR_BUFFER_BIT){
 		GL.bindFramebuffer(GL.FRAMEBUFFER, writeFrameBufferObject);
-		GL.clearColor (0, 0, 0, 1);
-		GL.clear (mask);
+		GL.clearColor(0, 0, 0, 1);
+		GL.clear(mask);
 	}
 
 	public inline function dispose(){
