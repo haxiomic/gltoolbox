@@ -3,7 +3,7 @@
   "url": "https://github.com/haxiomic/GLToolbox",
   "license": "MIT",
   "tags": [],
-  "description": "OpenGL utilities",
-  "version": "0.0.1",
+  "description": "Tools for haxe OpenGL programs",
+  "version": "0.1.0",
   "releasenote": ""
 }

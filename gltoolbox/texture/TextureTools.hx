@@ -1,22 +1,7 @@
-package gltoolbox;
+package gltoolbox.texture;
 
-#if snow
-import snow.modules.opengl.GL;
-#elseif lime
-import lime.graphics.opengl.GL;
-import lime.graphics.opengl.GLTexture;
-#end
-
-typedef TextureFactory = Int->Int->GLTexture; //(width, height):GLTexture
-
-typedef TextureParams = {
-	@:optional var channelType:Int;
-	@:optional var dataType:Int;
-	@:optional var filter:Int;
-	@:optional var wrapS:Int;
-	@:optional var wrapT:Int;
-	@:optional var unpackAlignment:Int;
-}
+import gltoolbox.gl.GLTexture;
+import gltoolbox.gl.GL;
 
 class TextureTools{
 
@@ -83,4 +68,5 @@ class TextureTools{
 			dataType: GL.FLOAT
 		});
 	}
+	
 }

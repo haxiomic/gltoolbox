@@ -5,14 +5,13 @@
 
 package gltoolbox.render;
 
+import gltoolbox.gl.GL;
 import gltoolbox.gl.GLBuffer;
 import gltoolbox.gl.GLFramebuffer;
 import gltoolbox.gl.GLTexture;
-import gltoolbox.gl.GL;
+import gltoolbox.render.RenderTools;
 
-import shaderblox.ShaderBase;
-
-class RenderTarget implements ITarget{
+class RenderTarget implements IRenderTarget{
 
 	public var width 			 (default, null):Int;
 	public var height 			 (default, null):Int;
@@ -26,11 +25,6 @@ class RenderTarget implements ITarget{
 			textureFactory = gltoolbox.TextureTools.createTextureFactory();
 		}
 
-		//static texture quad (only need one on GPU)
-		if(textureQuad == null){
-			textureQuad = gltoolbox.GeometryTools.getCachedUnitQuad(GL.TRIANGLE_STRIP);
-		}
-
 		this.width = width;
 		this.height = height;
 		this.textureFactory = textureFactory;
@@ -41,7 +35,7 @@ class RenderTarget implements ITarget{
 		resize(width, height);
 	}
 
-	public inline function resize(width:Int, height:Int):ITarget{
+	public inline function resize(width:Int, height:Int):Void{
 		var newTexture = textureFactory(width, height);
 		//attach texture to frame buffer object's color component	
 		GL.bindFramebuffer(GL.FRAMEBUFFER, this.frameBufferObject);
@@ -54,7 +48,7 @@ class RenderTarget implements ITarget{
 			GL.bindFramebuffer(GL.FRAMEBUFFER, frameBufferObject);
 			GL.viewport(0, 0, width, height);
 
-			GL.bindBuffer(GL.ARRAY_BUFFER, textureQuad);
+			GL.bindBuffer(GL.ARRAY_BUFFER, RenderTools.textureQuad);
 
 			resampler.activate(true, true);
 			GL.drawArrays(GL.TRIANGLE_STRIP, 0, 4);
@@ -83,8 +77,5 @@ class RenderTarget implements ITarget{
 	public inline function dispose(){
 		GL.deleteFramebuffer(frameBufferObject);
 		GL.deleteTexture(texture);
-	}
-
-	static var textureQuad:GLBuffer;
-	
+	}	
 }

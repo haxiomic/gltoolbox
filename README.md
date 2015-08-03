@@ -1,5 +1,5 @@
 #GLToolbox
-A collection of utilities to slim down the process of writing haxe-based OpenGL programs.
+A collection of utilities to slim down the process of writing haxe OpenGL programs.
 
 (NOT READY FOR USE)
 

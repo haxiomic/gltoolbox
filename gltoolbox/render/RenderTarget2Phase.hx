@@ -5,9 +5,7 @@ import gltoolbox.gl.GLFramebuffer;
 import gltoolbox.gl.GLTexture;
 import gltoolbox.gl.GL;
 
-import shaderblox.ShaderBase;
-
-class RenderTarget2Phase implements ITarget{
+class RenderTarget2Phase implements IRenderTarget{
 
 	public var width 			 (default, null):Int;
 	public var height 			 (default, null):Int;
@@ -19,13 +17,13 @@ class RenderTarget2Phase implements ITarget{
 	var textureFactory:Int->Int->GLTexture;
 
 	public inline function new(width:Int, height:Int, ?textureFactory:Int->Int->GLTexture){
-		if(textureFactory == null) textureFactory = gltoolbox.TextureTools.createTextureFactory();
+		if(textureFactory == null){
+			textureFactory = gltoolbox.TextureTools.createTextureFactory();
+		}
+		
 		this.width = width;
 		this.height = height;
 		this.textureFactory = textureFactory;
-
-		if(textureQuad == null)
-			textureQuad = gltoolbox.GeometryTools.getCachedUnitQuad(GL.TRIANGLE_STRIP);
 
 		this.writeFrameBufferObject = GL.createFramebuffer();
 		this.readFrameBufferObject  = GL.createFramebuffer();
@@ -33,15 +31,15 @@ class RenderTarget2Phase implements ITarget{
 		resize(width, height);
 	}
 
-	public function resize(width:Int, height:Int):ITarget{
+	public function resize(width:Int, height:Int):Void{
 		var newWriteToTexture  = textureFactory(width, height);
 		var newReadFromTexture = textureFactory(width, height);
 
-		//attach texture to frame buffer object's color component
+		//attach texture to write FBO color component
 		GL.bindFramebuffer(GL.FRAMEBUFFER, this.writeFrameBufferObject);
 		GL.framebufferTexture2D(GL.FRAMEBUFFER, GL.COLOR_ATTACHMENT0, GL.TEXTURE_2D, newWriteToTexture, 0);
 
-		//attach texture to frame buffer object's color component
+		//attach texture to read FBO color component
 		GL.bindFramebuffer(GL.FRAMEBUFFER, this.readFrameBufferObject);
 		GL.framebufferTexture2D(GL.FRAMEBUFFER, GL.COLOR_ATTACHMENT0, GL.TEXTURE_2D, newReadFromTexture, 0);
 
@@ -52,7 +50,7 @@ class RenderTarget2Phase implements ITarget{
 			GL.bindFramebuffer(GL.FRAMEBUFFER, readFrameBufferObject);
 			GL.viewport(0, 0, width, height);
 
-			GL.bindBuffer(GL.ARRAY_BUFFER, textureQuad);
+			GL.bindBuffer(GL.ARRAY_BUFFER, RenderTools.textureQuad);
 
 			resampler.activate(true, true);
 			GL.drawArrays(GL.TRIANGLE_STRIP, 0, 4);
@@ -112,8 +110,6 @@ class RenderTarget2Phase implements ITarget{
 		GL.deleteTexture(writeToTexture);
 		GL.deleteTexture(readFromTexture);
 	}
-
-	static var textureQuad:GLBuffer;
 	
 }
 

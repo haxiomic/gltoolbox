@@ -13,6 +13,8 @@ Color class
 
 Render targets clear color
 
+Resample needs a rework and support for upsampling
+
 ------------------
 
 Object
