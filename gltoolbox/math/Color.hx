@@ -10,7 +10,7 @@ abstract Color(Vec3) from Vec3{
 		this = new Vec3(r, g, b);
 	}
 
-	public inline function setRGB(r:Float, g:Float, b:Float):Color{
+	public inline function set(r:Float, g:Float, b:Float):Color{
 		set_r(r);
 		set_g(g);
 		set_b(b);
