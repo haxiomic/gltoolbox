@@ -7,7 +7,7 @@ abstract Color(Vec3) from Vec3{
 	public var g(get, set):Float;
 	public var b(get, set):Float;
 
-	public inline function new(r:Float, g:Float, b:Float){
+	public inline function new(r:Float = 0, g:Float = 0, b:Float = 0){
 		this = new Vec3(r, g, b);
 	}
 

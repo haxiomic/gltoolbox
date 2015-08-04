@@ -2,16 +2,12 @@
 
 ! Need to distinguish between buffers and objects
 
-Geometry
-- Caching should be handled by a flag to create() and automatic
-
 Textures
-- Texture tools should be split up and named something like buffer generation?
 - Perhaps a texture object should exist that contains the texture buffer
 
-Color class
+RenderTarget
+- Rather than using a texture factory, some sort of texture object should be used, we can then generate new texture from properties
 
-Render targets clear color
 
 Resample needs a rework and support for upsampling
 

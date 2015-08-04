@@ -4,6 +4,7 @@ import gltoolbox.gl.GLBuffer;
 import gltoolbox.gl.GLFramebuffer;
 import gltoolbox.gl.GLTexture;
 import gltoolbox.gl.GL;
+import gltoolbox.TextureTools;
 
 class RenderTarget2Phase implements IRenderTarget{
 
@@ -14,11 +15,15 @@ class RenderTarget2Phase implements IRenderTarget{
 	public var readFrameBufferObject  (default, null):GLFramebuffer;
 	public var readFromTexture        (default, null):GLTexture;
 
-	var textureFactory:Int->Int->GLTexture;
+	var textureFactory:TextureFactory;
 
-	public inline function new(width:Int, height:Int, ?textureFactory:Int->Int->GLTexture){
+	public inline function new(width:Int, height:Int, ?textureFactory:TextureFactory, ?clearColor:Color){
 		if(textureFactory == null){
-			textureFactory = gltoolbox.TextureTools.createTextureFactory();
+			textureFactory = TextureTools.createTextureFactory();
+		}
+
+		if(clearColor == null){
+			clearColor = new Color(0, 0, 0);
 		}
 		
 		this.width = width;
@@ -94,13 +99,13 @@ class RenderTarget2Phase implements IRenderTarget{
 
 	public inline function clearRead(mask:Int = GL.COLOR_BUFFER_BIT){
 		GL.bindFramebuffer(GL.FRAMEBUFFER, readFrameBufferObject);
-		GL.clearColor(0, 0, 0, 1);
+		GL.clearColor(clearColor.r, clearColor.g, clearColor.b, 1);
 		GL.clear(mask);
 	}
 
 	public inline function clearWrite(mask:Int = GL.COLOR_BUFFER_BIT){
 		GL.bindFramebuffer(GL.FRAMEBUFFER, writeFrameBufferObject);
-		GL.clearColor(0, 0, 0, 1);
+		GL.clearColor(clearColor.r, clearColor.g, clearColor.b, 1);
 		GL.clear(mask);
 	}
 

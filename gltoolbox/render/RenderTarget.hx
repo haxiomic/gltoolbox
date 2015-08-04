@@ -4,7 +4,10 @@ import gltoolbox.gl.GL;
 import gltoolbox.gl.GLBuffer;
 import gltoolbox.gl.GLFramebuffer;
 import gltoolbox.gl.GLTexture;
+import gltoolbox.math.Color;
 import gltoolbox.render.RenderTools;
+import gltoolbox.TextureTools;
+import gltoolbox.TextureTools.TextureFactory;
 
 class RenderTarget implements IRenderTarget{
 
@@ -13,11 +16,17 @@ class RenderTarget implements IRenderTarget{
 	public var frameBufferObject (default, null):GLFramebuffer;
 	public var texture           (default, null):GLTexture;
 
-	var textureFactory:Int->Int->GLTexture;
+	public var clearColor:Color;
 
-	public inline function new(width:Int, height:Int, ?textureFactory:Int->Int->GLTexture){
+	var textureFactory:TextureFactory;
+
+	public inline function new(width:Int, height:Int, ?textureFactory:TextureFactory, ?clearColor:Color){
 		if(textureFactory == null){
-			textureFactory = gltoolbox.TextureTools.createTextureFactory();
+			textureFactory = TextureTools.createTextureFactory();
+		}
+
+		if(clearColor == null){
+			clearColor = new Color(0, 0, 0);
 		}
 
 		this.width = width;
@@ -65,7 +74,7 @@ class RenderTarget implements IRenderTarget{
 
 	public inline function clear(mask:Int = GL.COLOR_BUFFER_BIT){
 		GL.bindFramebuffer(GL.FRAMEBUFFER, this.frameBufferObject);
-		GL.clearColor(0, 0, 0, 1);
+		GL.clearColor(clearColor.r, clearColor.g, clearColor.b, 1);
 		GL.clear(mask);
 	}
 

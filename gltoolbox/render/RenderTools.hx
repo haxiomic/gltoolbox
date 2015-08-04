@@ -13,7 +13,7 @@ class RenderTools{
 
 	static function get_textureQuad():GLBuffer{
 		if(textureQuad == null || !GL.isBuffer(textureQuad)){
-			textureQuad = BufferTools.createBuffer(QuadTools.unitQuad(textureQuadDrawMode), GL.STATIC_DRAW);
+			textureQuad = BufferTools.createGLBuffer(QuadTools.createUnitQuad(textureQuadDrawMode), GL.STATIC_DRAW);
 		}
 		return textureQuad;
 	}

@@ -8,7 +8,7 @@ class BufferTools{
 
 	static private var bufferCache = new BufferCache();
 
-	static public function createBuffer(vertices:Array<Float>, usage:Int = GL.STATIC_DRAW, allowCaching:Bool = false):GLBuffer{
+	static public function createGLBuffer(vertices:Array<Float>, usage:Int = GL.STATIC_DRAW, allowCaching:Bool = false):GLBuffer{
 		var buffer:GLBuffer;
 
 		if(allowCaching){

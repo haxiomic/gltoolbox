@@ -1,7 +1,7 @@
 package gltoolbox.texture;
 
-import gltoolbox.gl.GLTexture;
 import gltoolbox.gl.GL;
+import gltoolbox.gl.GLTexture;
 
 class TextureTools{
 
@@ -14,7 +14,7 @@ class TextureTools{
 		unpackAlignment : 4
 	};
 
-	static public function createTexture(width:Int, height:Int, ?params:TextureParams):GLTexture{
+	static public function createGLTexture(width:Int, height:Int, ?params:TextureParams):GLTexture{
 		if(params == null) params = {};
 
 		//extend default params
@@ -49,21 +49,21 @@ class TextureTools{
 		return texture;
 	}
 
-	static public inline function createTextureFactory(?params:TextureParams):TextureFactory{
+	static public inline function createGLTextureFactory(?params:TextureParams):GLTextureFactory{
 		return function (width:Int, height:Int){
-			return createTexture(width, height, params);
+			return createGLTexture(width, height, params);
 		}
 	}
 
-	static public inline function createFloatTextureRGB(width:Int, height:Int):GLTexture{
-		return createTexture(width, height, {
+	static public inline function createGLTextureFloatRGB(width:Int, height:Int):GLTexture{
+		return createGLTexture(width, height, {
 			channelType: GL.RGB,
 			dataType: GL.FLOAT
 		});
 	}
 
-	static public inline function createFloatTextureRGBA(width:Int, height:Int):GLTexture{
-		return createTexture(width, height, {
+	static public inline function createGLTextureFloatRGBA(width:Int, height:Int):GLTexture{
+		return createGLTexture(width, height, {
 			channelType: GL.RGBA,
 			dataType: GL.FLOAT
 		});
