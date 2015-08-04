@@ -4,10 +4,12 @@
 
 Textures
 - Perhaps a texture object should exist that contains the texture buffer
+	-> do away with TextureFactory
 
 RenderTarget
 - Rather than using a texture factory, some sort of texture object should be used, we can then generate new texture from properties
 
+Shader creation in GLTools.hx
 
 Resample needs a rework and support for upsampling
 
