@@ -2,7 +2,7 @@ package gltoolbox.geometry;
 
 class QuadTools{
 
-	static public function rectangleQuad(
+	static public function createRectangleQuad(
 		originX:Float = 0,
 		originY:Float = 0,
 		width:Float   = 1,
@@ -42,20 +42,21 @@ class QuadTools{
 		return vertices;
 	}
 
-	static public inline function unitQuad(drawMode:Int = GL.TRIANGLE_STRIP):Array<Float>{
-		return rectangleQuad(0, 0, 1, 1, drawMode);
+	static public inline function createUnitQuad(drawMode:Int = GL.TRIANGLE_STRIP):Array<Float>{
+		return createRectangleQuad(0, 0, 1, 1, drawMode);
 	}
 
-	static public inline function clipSpaceQuad(drawMode:Int = GL.TRIANGLE_STRIP):Array<Float>{
-		return rectangleQuad(-1, -1, 2, 2, drawMode);
+	static public inline function createClipSpaceQuad(drawMode:Int = GL.TRIANGLE_STRIP):Array<Float>{
+		return createRectangleQuad(-1, -1, 2, 2, drawMode);
 	}
 
-	static public function rectangleQuadLines(
+	static public function createRectangleQuadLines(
 		originX:Float = 0,
 		originY:Float = 0,
 		width:Float   = 1,
 		height:Float  = 1
 	):Array<Float>{
+		
 		/*  
 		*   OpenGL line drawing
 		*   +--X--+-----+-----+

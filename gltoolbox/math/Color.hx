@@ -2,6 +2,7 @@ package gltoolbox.math;
 
 @:forward
 abstract Color(Vec3) from Vec3{
+
 	public var r(get, set):Float;
 	public var g(get, set):Float;
 	public var b(get, set):Float;
@@ -42,4 +43,5 @@ abstract Color(Vec3) from Vec3{
 	inline function set_b(v:Float):Float return this.z = v;
 
 	public inline function toString():String return 'Color(${this.x}, ${this.y}, ${this.z})';
+	
 }

@@ -1,8 +1,3 @@
-/*
-	@! TODO
-	- if context is changed or lost and regained, we need to be careful that textureQuad is still valid
-*/
-
 package gltoolbox.render;
 
 import gltoolbox.gl.GL;
@@ -77,5 +72,6 @@ class RenderTarget implements IRenderTarget{
 	public inline function dispose(){
 		GL.deleteFramebuffer(frameBufferObject);
 		GL.deleteTexture(texture);
-	}	
+	}
+	
 }

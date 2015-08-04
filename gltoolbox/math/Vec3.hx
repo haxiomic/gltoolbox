@@ -1,14 +1,13 @@
 package gltoolbox.math;
 
-import haxe.ds.Vector;
+abstract Vec3(VectorData) from VectorData{
 
-abstract Vec3(Vector<Float>) from Vector<Float>{
 	public var x(get, set):Float;
 	public var y(get, set):Float;
 	public var z(get, set):Float;
 
 	public inline function new(x:Float = 0, y:Float = 0, z:Float = 0){
-		this = new Vector<Float>(3);
+		this = new VectorData(3);
 		set(x, y, z);
 	}
 
@@ -213,4 +212,5 @@ abstract Vec3(Vector<Float>) from Vector<Float>{
 	inline function set_z(v:Float):Float return this[2] = v;
 
 	public inline function toString():String return 'Vec3($x, $y, $z)';
+	
 }

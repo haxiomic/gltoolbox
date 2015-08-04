@@ -1,15 +1,14 @@
 package gltoolbox.math;
 
-import haxe.ds.Vector;
-
-abstract Vec4(Vector<Float>) from Vector<Float>{
+abstract Vec4(VectorData) from VectorData{
+	
 	public var x(get, set):Float;
 	public var y(get, set):Float;
 	public var z(get, set):Float;
 	public var w(get, set):Float;
 
 	public inline function new(x:Float = 0, y:Float = 0, z:Float = 0, w:Float = 0){
-		this = new Vector<Float>(4);
+		this = new VectorData(4);
 		set(x, y, z, w);
 	}
 
@@ -203,4 +202,5 @@ abstract Vec4(Vector<Float>) from Vector<Float>{
 	inline function set_w(v:Float):Float return this[3] = v;
 
 	public inline function toString():String return 'Vec4($x, $y, $z, $w)';
+
 }
