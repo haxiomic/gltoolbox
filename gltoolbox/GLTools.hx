@@ -120,21 +120,6 @@ class GLTools{
 		return texture;
 	}
 
-	static public inline function createGLTextureFactory(
-		width:Int,
-		height:Int,
-		channelType:Int = GL.RGBA,
-		dataType:Int = GL.UNSIGNED_BYTE,
-		filter:Int = GL.NEAREST,
-		wrapS:Int = GL.CLAMP_TO_EDGE,
-		wrapT:Int = GL.CLAMP_TO_EDGE,
-		unpackAlignment:Int = 4
-	):GLTextureFactory{
-		return function (width:Int, height:Int){
-			return createGLTexture(width, height, channelType, dataType, filter, wrapS, wrapT, unpackAlignment);
-		}
-	}
-
 	static public inline function createGLTextureFloatRGB(width:Int, height:Int):GLTexture{
 		return createGLTexture(width, height, GL.RGB, GL.FLOAT);
 	}
