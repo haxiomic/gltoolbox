@@ -40,15 +40,7 @@ abstract Vec4(VectorData) from VectorData{
 		return this;
 	}
 
-	public inline function setFn(fn:Int->Float):Vec4{
-		x = fn(0);
-		y = fn(1);
-		z = fn(2);
-		w = fn(3);
-		return this;
-	}
-
-	public inline function applyFn(fn:Vec4->Int->Void):Vec4{
+	public inline function each(fn:Vec4->Int->Void):Vec4{
 		fn(this, 0);
 		fn(this, 1);
 		fn(this, 2);
@@ -57,44 +49,44 @@ abstract Vec4(VectorData) from VectorData{
 	}
 
 	public inline function add(v:Vec4):Vec4{
-		applyFn(function(t:Vec4, i:Int) t[i] += v[i]);
+		each(function(t:Vec4, i:Int) this[i] += v[i]);
 		return this;
 	}
 
 	public inline function addScalar(s:Float):Vec4{
-		applyFn(function(t:Vec4, i:Int) t[i] += s);
+		each(function(t:Vec4, i:Int) this[i] += s);
 		return this;
 	}
 
 	public inline function sub(v:Vec4):Vec4{
-		applyFn(function(t:Vec4, i:Int) t[i] -= v[i]);
+		each(function(t:Vec4, i:Int) this[i] -= v[i]);
 		return this;
 	}
 
 	public inline function subScalar(s:Float):Vec4{
-		applyFn(function(t:Vec4, i:Int) t[i] -= s);
+		each(function(t:Vec4, i:Int) this[i] -= s);
 		return this;
 	}
 
 	public inline function multiply(v:Vec4):Vec4{
-		applyFn(function(t:Vec4, i:Int) t[i] *= v[i]);
+		each(function(t:Vec4, i:Int) this[i] *= v[i]);
 		return this;
 	}
 
 	public inline function multiplyScalar(s:Float):Vec4{
-		applyFn(function(t:Vec4, i:Int) t[i] *= s);
+		each(function(t:Vec4, i:Int) this[i] *= s);
 		return this;
 	}
 
 	public inline function divide(v:Vec4):Vec4{
-		applyFn(function(t:Vec4, i:Int) t[i] /= v[i]);
+		each(function(t:Vec4, i:Int) this[i] /= v[i]);
 		return this;
 	}
 
 	public inline function divideScalar(s:Float):Vec4{
 		if(s != 0){
 			var invS = 1/s;
-			applyFn(function(t:Vec4, i:Int) t[i] *= invS);
+			each(function(t:Vec4, i:Int) this[i] *= invS);
 		}else{
 			x = 0;
 			y = 0;
@@ -106,17 +98,17 @@ abstract Vec4(VectorData) from VectorData{
 	}
 
 	public inline function min(v:Vec4):Vec4{
-		applyFn(function(t:Vec4, i:Int) if(t[i] > v[i]) t[i] = v[i] );
+		each(function(t:Vec4, i:Int) if(this[i] > v[i]) this[i] = v[i] );
 		return this;
 	}
 
 	public inline function max(v:Vec4):Vec4{
-		applyFn(function(t:Vec4, i:Int) if(t[i] < v[i]) t[i] = v[i] );
+		each(function(t:Vec4, i:Int) if(this[i] < v[i]) this[i] = v[i] );
 		return this;
 	}
 
 	public inline function clamp(min:Vec4, max:Vec4):Vec4{
-		applyFn(function(t:Vec4, i:Int){
+		each(function(t:Vec4, i:Int){
 			if(this[i] < min[i])
 				this[i] = min[i];
 			else if(this[i] > max[i])
@@ -126,7 +118,7 @@ abstract Vec4(VectorData) from VectorData{
 	}
 
 	public inline function clampScalar(minVal:Float, maxVal:Float):Vec4{
-		applyFn(function(t:Vec4, i:Int){
+		each(function(t:Vec4, i:Int){
 			if(this[i] < minVal)
 				this[i] = minVal;
 			else if(this[i] > maxVal)
@@ -136,17 +128,17 @@ abstract Vec4(VectorData) from VectorData{
 	}
 
 	public inline function floor( s:Float ):Vec4{
-		applyFn(function(t:Vec4, i:Int) t[i] = Math.floor(t[i]) );
+		each(function(t:Vec4, i:Int) this[i] = Math.floor(this[i]) );
 		return this;
 	}
 
 	public inline function ceil():Vec4{
-		applyFn(function(t:Vec4, i:Int) t[i] = Math.ceil(t[i]) );
+		each(function(t:Vec4, i:Int) this[i] = Math.ceil(this[i]) );
 		return this;
 	}
 
 	public inline function round():Vec4{
-		applyFn(function(t:Vec4, i:Int) t[i] = Math.round(t[i]) );
+		each(function(t:Vec4, i:Int) this[i] = Math.round(this[i]) );
 		return this;
 	}
 
@@ -175,7 +167,7 @@ abstract Vec4(VectorData) from VectorData{
 	}
 
 	public inline function lerp(v:Vec4, alpha:Float):Vec4{
-		applyFn(function(t:Vec4, i:Int) t[i] = t[i] + (v[i] - t[i])*alpha );
+		each(function(t:Vec4, i:Int) this[i] = this[i] + (v[i] - this[i])*alpha );
 		return this;
 	}
 

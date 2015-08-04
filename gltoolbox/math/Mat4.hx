@@ -20,17 +20,9 @@ abstract Mat4(VectorData) from VectorData{
 		return this;
 	}
 
-	public inline function setFn(fn:Int->Int->Int->Float):Mat4{
-		//(r, c);
-		//i = (c - 1)*3 + (r - 1)
-		this[0] = fn(0, 1, 1); this[4] = fn(4, 1, 2); this[8] = fn(8, 1, 3); this[12] = fn(12, 1, 4);
-		this[1] = fn(1, 2, 1); this[5] = fn(5, 2, 2); this[9] = fn(9, 2, 3); this[13] = fn(13, 2, 4);
-		this[2] = fn(2, 3, 1); this[6] = fn(6, 3, 2); this[10] = fn(10, 3, 3); this[14] = fn(14, 3, 4);
-		this[3] = fn(3, 4, 1); this[7] = fn(7, 4, 2); this[11] = fn(11, 4, 3); this[15] = fn(15, 4, 4);
-		return this;
-	}
-
-	public inline function applyFn(fn:Mat4->Int->Int->Int->Void):Mat4{
+	public inline function each(fn:Mat4->Int->Int->Int->Void):Mat4{
+		//(idx, row, col);
+		//idx = (col - 1)*3 + (row - 1)
 		fn(this, 0, 1, 1); fn(this, 4, 1, 2); fn(this, 8, 1, 3);  fn(this, 12, 1, 4);
 		fn(this, 1, 2, 1); fn(this, 5, 2, 2); fn(this, 9, 2, 3);  fn(this, 13, 2, 4);
 		fn(this, 2, 3, 1); fn(this, 6, 3, 2);  fn(this, 10, 3, 3);  fn(this, 14, 3, 4);
@@ -39,12 +31,12 @@ abstract Mat4(VectorData) from VectorData{
 	}
 
 	public function identity():Mat4{
-		applyFn(function(t:Mat4, idx:Int, i:Int, j:Int) t[idx] = (i == j ? 1 : 0) );
+		each(function(t:Mat4, idx:Int, i:Int, j:Int) this[idx] = (i == j ? 1 : 0) );
 		return this;
 	}
 
 	public function multiplyScalar(s:Float):Mat4{
-		applyFn(function(t:Mat4, idx:Int, i:Int, j:Int) t[idx] *= s );
+		each(function(t:Mat4, idx:Int, i:Int, j:Int) this[idx] *= s );
 		return this;
 	}
 
