@@ -1,0 +1,31 @@
+{
+
+	project: {
+		name: 'scene-graph-test',
+		version: '1.0.0',
+		author: 'haxiomic',
+
+		app: {
+			name: 'scene-graph-test',
+			package: 'com.github.haxiomic',
+		},
+
+		build: {
+			flags: [
+				'-dce', 'full',
+				'-cp', '../src'
+			],
+			defines: ['analyzer'],
+			dependencies: {
+				snow: '*',
+				gltoolbox: '*'
+			}
+		},
+
+		files: {
+			config: 'config.json',
+			assets: 'assets/'
+		}
+	}
+
+}
