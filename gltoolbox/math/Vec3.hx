@@ -1,13 +1,13 @@
 package gltoolbox.math;
 
-abstract Vec3(VectorData) from VectorData{
+abstract Vec3(VectorDataType) from VectorDataType{
 
 	public var x(get, set):Float;
 	public var y(get, set):Float;
 	public var z(get, set):Float;
 
 	public inline function new(x:Float = 0, y:Float = 0, z:Float = 0){
-		this = new VectorData(3);
+		this = new VectorDataType(3);
 		set(x, y, z);
 	}
 

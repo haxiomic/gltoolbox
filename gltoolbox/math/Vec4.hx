@@ -1,6 +1,6 @@
 package gltoolbox.math;
 
-abstract Vec4(VectorData) from VectorData{
+abstract Vec4(VectorDataType) from VectorDataType{
 	
 	public var x(get, set):Float;
 	public var y(get, set):Float;
@@ -8,7 +8,7 @@ abstract Vec4(VectorData) from VectorData{
 	public var w(get, set):Float;
 
 	public inline function new(x:Float = 0, y:Float = 0, z:Float = 0, w:Float = 0){
-		this = new VectorData(4);
+		this = new VectorDataType(4);
 		set(x, y, z, w);
 	}
 

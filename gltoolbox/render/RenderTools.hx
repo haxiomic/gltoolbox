@@ -1,8 +1,12 @@
+/*
+	@! out of sync
+*/
+
 package gltoolbox.render;
 
 import gltoolbox.gl.GL;
 import gltoolbox.buffer.BufferTools;
-import gltoolbox.geometry.QuadTools;
+import gltoolbox.geometry.Quad;
 
 class RenderTools{
 
@@ -13,7 +17,7 @@ class RenderTools{
 
 	static function get_textureQuad():GLBuffer{
 		if(textureQuad == null || !GL.isBuffer(textureQuad)){
-			textureQuad = BufferTools.createGLBuffer(QuadTools.createUnitQuad(textureQuadDrawMode), GL.STATIC_DRAW);
+			textureQuad = BufferTools.uploadVerticies(Quad.unitQuadVertices(textureQuadDrawMode), GL.STATIC_DRAW);
 		}
 		return textureQuad;
 	}

@@ -1,12 +1,12 @@
 package gltoolbox.math;
 
-abstract Vec2(VectorData) from VectorData{
+abstract Vec2(VectorDataType) from VectorDataType{
 
 	public var x(get, set):Float;
 	public var y(get, set):Float;
 
 	public inline function new(x:Float = 0, y:Float = 0){
-		this = new VectorData(2);
+		this = new VectorDataType(2);
 		set(x, y);
 	}
 

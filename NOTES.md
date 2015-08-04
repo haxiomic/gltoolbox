@@ -9,9 +9,32 @@ Textures
 RenderTarget
 - Rather than using a texture factory, some sort of texture object should be used, we can then generate new texture from properties
 
-Shader creation in GLTools.hx
-
 Resample needs a rework and support for upsampling
+
+
+gltooblox.geometry
+
+	## Option 1
+	What if vertex functions are just static functions of geometry classes
+
+	var sphere = new geometry.Sphere();
+	var quadVerticies = geometry.Quad.rectangleVertices(...);
+	var cubeNormals = geometry.Cube.normals(...)
+
+	Do we still want to have a VertexData class to know number of vertices for example?
+
+	---------
+
+	## Options 2
+
+	contains things like Sphere and Cube, as well as vertex, normals and w/e else generators?
+
+		var sphere = new geometry.Sphere();
+		var rectVertices = geometry.data.QuadData.rectangle();
+
+!Consider VertexData class
+
+Sync up render classes
 
 ------------------
 

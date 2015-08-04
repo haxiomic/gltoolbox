@@ -1,8 +1,10 @@
 package gltoolbox.geometry;
 
-class QuadTools{
+import gltoolbox.gl.GL;
 
-	static public function createRectangleQuad(
+class Quad{
+
+	static public function rectangleVertices(
 		originX:Float = 0,
 		originY:Float = 0,
 		width:Float   = 1,
@@ -42,15 +44,15 @@ class QuadTools{
 		return vertices;
 	}
 
-	static public inline function createUnitQuad(drawMode:Int = GL.TRIANGLE_STRIP):Array<Float>{
-		return createRectangleQuad(0, 0, 1, 1, drawMode);
+	static public inline function unitQuadVertices(drawMode:Int = GL.TRIANGLE_STRIP):Array<Float>{
+		return rectangleVertices(0, 0, 1, 1, drawMode);
 	}
 
-	static public inline function createClipSpaceQuad(drawMode:Int = GL.TRIANGLE_STRIP):Array<Float>{
-		return createRectangleQuad(-1, -1, 2, 2, drawMode);
+	static public inline function clipSpaceQuadVertices(drawMode:Int = GL.TRIANGLE_STRIP):Array<Float>{
+		return rectangleVertices(-1, -1, 2, 2, drawMode);
 	}
 
-	static public function createRectangleQuadLines(
+	static public function rectangleEdgeVertices(
 		originX:Float = 0,
 		originY:Float = 0,
 		width:Float   = 1,
@@ -85,7 +87,7 @@ class QuadTools{
 			//left
 			originX+0.5       , originY+0          ,
 			originX+0.5       , originY+height
-		]
+		];
 	}
 
 }

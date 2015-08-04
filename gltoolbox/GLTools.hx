@@ -1,15 +1,66 @@
+/*
+	GLTools
+
+	Utility functions for common GL operations
+
+	@! notes
+	- should be a thin (essentially) standalone interface over GL
+	- no compound types here
+*/
+
 package gltoolbox;
 
 import gltoolbox.gl.GL;
 import gltoolbox.gl.GLBuffer;
 import gltoolbox.gl.GLTexture;
+import gltoolbox.gl.GLProgram;
+
+import gltoolbox.typedarray.Float32Array;
+
+import gltoolbox.texture.GLTextureFactory;
 
 class GLTools{
+
+	//Shader Tools
+	static public function uploadShaders(geometryShaderSrc:String, pixelShaderSrc:String):GLProgram{
+		var geometryShader = GL.createShader(GL.VERTEX_SHADER);
+		GL.shaderSource(geometryShader, geometryShaderSrc);
+		GL.compileShader(geometryShader);
+
+		//check for compilation errors
+		if(GL.getShaderParameter(geometryShader, GL.COMPILE_STATUS) == 0){
+			throw 'Geometry shader error: '+GL.getShaderInfoLog(geometryShader);
+		}
+
+		var pixelShader = GL.createShader(GL.FRAGMENT_SHADER);
+		GL.shaderSource(pixelShader, pixelShaderSrc);
+		GL.compileShader(pixelShader);
+
+		//check for compilation errors
+		if(GL.getShaderParameter(pixelShader, GL.COMPILE_STATUS) == 0){
+			throw 'Pixel shader error: '+GL.getShaderInfoLog(pixelShader);
+		}
+
+		var program = GL.createProgram();
+		GL.attachShader(program, geometryShader);
+		GL.attachShader(program, pixelShader);
+		GL.linkProgram(program);
+
+		if(GL.getProgramParameter(program, GL.LINK_STATUS) == 0){
+			GL.detachShader(program, geometryShader);
+			GL.detachShader(program, pixelShader);
+			GL.deleteShader(geometryShader);
+			GL.deleteShader(pixelShader);
+			throw GL.getProgramInfoLog(program);
+		}
+
+		return program;
+	}
 
 	//Buffer Tools
 	static private var bufferCache = new BufferCache();
 
-	static public function createGLBuffer(vertices:Array<Float>, usage:Int = GL.STATIC_DRAW, allowCaching:Bool = false):GLBuffer{
+	static public function uploadVertices(vertices:Array<Float>, usage:Int = GL.STATIC_DRAW, allowCaching:Bool = false):GLBuffer{
 		var buffer:GLBuffer;
 
 		if(allowCaching){
@@ -20,7 +71,7 @@ class GLTools{
 
 		var buffer = GL.createBuffer();
 		GL.bindBuffer(GL.ARRAY_BUFFER, buffer);
-		GL.bufferData(GL.ARRAY_BUFFER, new Float32Array(vertices), buffer);
+		GL.bufferData(GL.ARRAY_BUFFER, new Float32Array(vertices), usage);
 		GL.bindBuffer(GL.ARRAY_BUFFER, null);
 
 		if(allowCaching){
@@ -31,22 +82,16 @@ class GLTools{
 	}
 
 	//Texture Tools
-	static public var defaultTextureParams:TextureParams = {
-		channelType     : GL.RGBA,
-		dataType        : GL.UNSIGNED_BYTE,
-		filter          : GL.NEAREST,
-		wrapS           : GL.CLAMP_TO_EDGE,
-		wrapT           : GL.CLAMP_TO_EDGE,
-		unpackAlignment : 4
-	};
-
-	static public function createGLTexture(width:Int, height:Int, ?params:TextureParams):GLTexture{
-		if(params == null) params = {};
-
-		//extend default params
-		for(f in Reflect.fields(defaultTextureParams))
-			if(!Reflect.hasField(params, f))
-				Reflect.setField(params, f, Reflect.field(defaultTextureParams, f));
+	static public function createGLTexture(
+		width:Int,
+		height:Int,
+		channelType:Int = GL.RGBA,
+		dataType:Int = GL.UNSIGNED_BYTE,
+		filter:Int = GL.NEAREST,
+		wrapS:Int = GL.CLAMP_TO_EDGE,
+		wrapT:Int = GL.CLAMP_TO_EDGE,
+		unpackAlignment:Int = 4
+	):GLTexture{
 
 		#if ios //@! temporary test
 		if(dataType == GL.FLOAT){
@@ -59,15 +104,15 @@ class GLTools{
 		GL.bindTexture (GL.TEXTURE_2D, texture);
 
 		//set params
-		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_MIN_FILTER, params.filter); 
-		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_MAG_FILTER, params.filter); 
-		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_WRAP_S, params.wrapS);
-		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_WRAP_T, params.wrapT);
+		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_MIN_FILTER, filter); 
+		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_MAG_FILTER, filter); 
+		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_WRAP_S, wrapS);
+		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_WRAP_T, wrapT);
 
-		GL.pixelStorei(GL.UNPACK_ALIGNMENT, params.unpackAlignment); //see http://www.khronos.org/opengles/sdk/docs/man/xhtml/glPixelStorei.xml
+		GL.pixelStorei(GL.UNPACK_ALIGNMENT, unpackAlignment); //see http://www.khronos.org/opengles/sdk/docs/man/xhtml/glPixelStorei.xml
 
 		//set data
-		GL.texImage2D(GL.TEXTURE_2D, 0, params.channelType, width, height, 0, params.channelType, params.dataType, null);
+		GL.texImage2D(GL.TEXTURE_2D, 0, channelType, width, height, 0, channelType, dataType, null);
 
 		//unbind
 		GL.bindTexture(GL.TEXTURE_2D, null);
@@ -75,24 +120,27 @@ class GLTools{
 		return texture;
 	}
 
-	static public inline function createGLTextureFactory(?params:TextureParams):GLTextureFactory{
+	static public inline function createGLTextureFactory(
+		width:Int,
+		height:Int,
+		channelType:Int = GL.RGBA,
+		dataType:Int = GL.UNSIGNED_BYTE,
+		filter:Int = GL.NEAREST,
+		wrapS:Int = GL.CLAMP_TO_EDGE,
+		wrapT:Int = GL.CLAMP_TO_EDGE,
+		unpackAlignment:Int = 4
+	):GLTextureFactory{
 		return function (width:Int, height:Int){
-			return createGLTexture(width, height, params);
+			return createGLTexture(width, height, channelType, dataType, filter, wrapS, wrapT, unpackAlignment);
 		}
 	}
 
 	static public inline function createGLTextureFloatRGB(width:Int, height:Int):GLTexture{
-		return createGLTexture(width, height, {
-			channelType: GL.RGB,
-			dataType: GL.FLOAT
-		});
+		return createGLTexture(width, height, GL.RGB, GL.FLOAT);
 	}
 
 	static public inline function createGLTextureFloatRGBA(width:Int, height:Int):GLTexture{
-		return createGLTexture(width, height, {
-			channelType: GL.RGBA,
-			dataType: GL.FLOAT
-		});
+		return createGLTexture(width, height, GL.RGBA, GL.FLOAT);
 	}
 	
 }
@@ -100,8 +148,8 @@ class GLTools{
 
 /* BufferCache */
 private typedef BufferKey = {
-	vertices:Array<Float>;
-	usage:Int;
+	var vertices:Array<Float>;
+	var usage:Int;
 };
 
 private typedef BufferCacheItem = {

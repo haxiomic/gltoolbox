@@ -1,1 +1,0 @@
-typedef GLTextureFactory = Int->Int->GLTexture; //(width, height):GLTexture

@@ -1,9 +1,9 @@
 package gltoolbox.math;
 
-abstract Mat3(VectorData) from VectorData{
+abstract Mat3(VectorDataType) from VectorDataType{
 
 	public inline function new(){
-		this = new VectorData(9);
+		this = new VectorDataType(9);
 		identity();
 	}
 
