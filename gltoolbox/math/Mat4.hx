@@ -23,10 +23,10 @@ abstract Mat4(VectorDataType) from VectorDataType{
 	public inline function each(fn:Mat4->Int->Int->Int->Void):Mat4{
 		//(idx, row, col);
 		//idx = (col - 1)*3 + (row - 1)
-		fn(this, 0, 1, 1); fn(this, 4, 1, 2); fn(this, 8, 1, 3);  fn(this, 12, 1, 4);
-		fn(this, 1, 2, 1); fn(this, 5, 2, 2); fn(this, 9, 2, 3);  fn(this, 13, 2, 4);
-		fn(this, 2, 3, 1); fn(this, 6, 3, 2);  fn(this, 10, 3, 3);  fn(this, 14, 3, 4);
-		fn(this, 3, 4, 1); fn(this, 7, 4, 2);  fn(this, 11, 4, 3);  fn(this, 15, 4, 4);
+		fn(this, 0, 1, 1); fn(this, 4, 1, 2); fn(this, 8, 1, 3); fn(this, 12, 1, 4);
+		fn(this, 1, 2, 1); fn(this, 5, 2, 2); fn(this, 9, 2, 3); fn(this, 13, 2, 4);
+		fn(this, 2, 3, 1); fn(this, 6, 3, 2); fn(this, 10, 3, 3); fn(this, 14, 3, 4);
+		fn(this, 3, 4, 1); fn(this, 7, 4, 2); fn(this, 11, 4, 3); fn(this, 15, 4, 4);
 		return this;
 	}
 

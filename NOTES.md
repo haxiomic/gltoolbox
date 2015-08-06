@@ -11,8 +11,36 @@ RenderTarget
 
 Resample needs a rework and support for upsampling
 
-
 gltooblox.geometry
+
+	Geometry2D Rectangle and a general-usage rectangle class?
+	One for GPU use and the other for AABB?
+
+
+	should we have a vertices class?
+
+	new Vertices([
+		0.0, 0.0,
+		1.0, 1.0,
+		2.0, 2.0
+	], 2);
+
+	What about a triangles class?
+
+	Need to distinguish between vertices used for abstract representation of a geometry and vertices sent to the GPU
+
+	Cube has vertices, normals, uvs, indices, maybe tangents, colors
+
+	abstract Triangles(Float32Array){
+
+	}
+
+	Geometry2D and Geometry3D?
+	what's the difference?
+		Geometry3D has normals and others
+		What if you don't want normals?
+
+	should knowlege of dimensions be stored within the renderer or within Triangles?
 
 	## Option 1
 	What if vertex functions are just static functions of geometry classes
@@ -35,6 +63,10 @@ gltooblox.geometry
 !Consider VertexData class
 
 Sync up render classes
+
+Render pipeline. Do we create a renderer or consciously not and leave it up to the user?
+
+new Float32Array() is very slow. Make efforts to minimize vector creation!
 
 ------------------
 

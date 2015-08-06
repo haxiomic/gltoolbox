@@ -6,8 +6,10 @@ abstract Vec3(VectorDataType) from VectorDataType{
 	public var y(get, set):Float;
 	public var z(get, set):Float;
 
-	public inline function new(x:Float = 0, y:Float = 0, z:Float = 0){
+	public inline function new(x:Float = 0, ?y:Float, ?z:Float){
 		this = new VectorDataType(3);
+		if(y == null) y = x;
+		if(z == null) z = x;
 		set(x, y, z);
 	}
 

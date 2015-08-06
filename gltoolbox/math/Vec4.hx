@@ -7,8 +7,11 @@ abstract Vec4(VectorDataType) from VectorDataType{
 	public var z(get, set):Float;
 	public var w(get, set):Float;
 
-	public inline function new(x:Float = 0, y:Float = 0, z:Float = 0, w:Float = 0){
+	public inline function new(x:Float = 0, ?y:Float, ?z:Float, ?w:Float){
 		this = new VectorDataType(4);
+		if(y == null) y = x;
+		if(z == null) z = x;
+		if(w == null) w = x;
 		set(x, y, z, w);
 	}
 

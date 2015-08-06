@@ -1,5 +1,3 @@
 package gltoolbox.math;
 
-import gltoolbox.typedarray.Float32Array;
-
-typedef VectorDataType = Float32Array;
+typedef VectorDataType = haxe.io.Float32Array;

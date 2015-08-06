@@ -5,8 +5,9 @@ abstract Vec2(VectorDataType) from VectorDataType{
 	public var x(get, set):Float;
 	public var y(get, set):Float;
 
-	public inline function new(x:Float = 0, y:Float = 0){
+	public inline function new(x:Float = 0, ?y:Float){
 		this = new VectorDataType(2);
+		if(y == null) y = x;
 		set(x, y);
 	}
 
