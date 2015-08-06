@@ -1,9 +1,10 @@
-import gltoolbox.core.BufferAttribute;
 import snow.system.window.Window;
 import snow.types.Types.AppConfig;
 import snow.types.Types.ModState;
 import snow.types.Types.Key;
 
+
+import gltoolbox.core.Attribute;
 import gltoolbox.gl.GL;
 import gltoolbox.gl.GLBuffer;
 import gltoolbox.gl.GLProgram;
@@ -116,11 +117,12 @@ class Main extends snow.App {
 				var attr = geom.attributes[name];
 				if(attr == null) continue;
 
-				//is it a buffer attribute?
-				if(Reflect.hasField(attr, 'buffer')){
-					var bufferAttr:BufferAttribute<Dynamic> = cast attr;
-					GL.bindBuffer(GL.ARRAY_BUFFER, bufferAttr.buffer);
-					GL.vertexAttribPointer(programObject.attributeLocations[name], bufferAttr.itemSize, GL.FLOAT, false, 0, 0);
+				switch attr{
+					//buffer attribute
+					case BufferAttribute(data):
+						GL.bindBuffer(GL.ARRAY_BUFFER, data.buffer);
+						GL.vertexAttribPointer(programObject.attributeLocations[name], data.itemSize, GL.FLOAT, false, 0, 0);
+					default:
 				}
 
 			}

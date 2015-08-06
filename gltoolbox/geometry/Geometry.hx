@@ -11,7 +11,6 @@
 package gltoolbox.geometry;
 
 import gltoolbox.core.Attribute;
-import gltoolbox.core.BufferAttribute;
 import gltoolbox.gl.GL;
 import gltoolbox.gl.GLBuffer;
 import gltoolbox.GLTools;
@@ -24,18 +23,18 @@ class Geometry{
 
 	//rendering
 	public var drawMode:Int = GL.TRIANGLES;
-	public var vertexAttribute:BufferAttribute<Float32Array>;
-	public var attributes:Map<String, Attribute<Dynamic>>;
+	public var vertexAttribute:BufferAttributeData<Float32Array>;
+	public var attributes:Map<String, Attribute>;
 
 	public function new(){
 		vertexAttribute = {
 			data: null,
 			itemSize: 0,
 			buffer: null
-		};
+		}
 
 		attributes = [
-			'position' => vertexAttribute
+			'position' => BufferAttribute(vertexAttribute)
 		];
 	}
 
