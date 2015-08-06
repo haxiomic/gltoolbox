@@ -1,24 +1,39 @@
-#TODO
+#NOTES
 
-! Need to distinguish between buffers and objects
+## Unresolved
+	- .clone() should be available in all objects
+	- Consistent GPU push API, for geometry it's .upload, what about for textures? .glPush?, .glFlush?
+	- How to distinguish between attribute and attribute data and same for uniforms (ie, what type should be on Shader and what type on geometry). enum AttributeType? enum AttributeData?
+	- How to implement blending?
+	- Passing 2D vertices to vec3 position should work
 
-Textures
-- Perhaps a texture object should exist that contains the texture buffer
-	-> do away with TextureFactory
+## Ideals:
+	- Need to distinguish between buffers and objects
 
-RenderTarget
-- Rather than using a texture factory, some sort of texture object should be used, we can then generate new texture from properties
+## Textures
+	- Simple texture class that stores texture parameters along with GLTexture
+	- offers .resize() [with optional resampling?]
 
-Resample needs a rework and support for upsampling
+## Shaders
+	- Minimalistic, contains .attributes and .uniforms
+	For example, shader might have 'position' attribute of type FVec2
 
-gltooblox.geometry
-	Cube has vertices, normals, uvs, indices, maybe tangents, colors
+## Geometry
+	- How to support uvs, indices, normals, colors, tangents?
+	- Need GeometryUtils .merge
 
-!Consider VertexData class
+## Render
+	- texture.clone() instead of texture factory
 
-Render pipeline. Do we create a renderer or consciously not and leave it up to the user?
+## Objects
+	- Local and world matrix transforms
+	- Add/remove()
+	- **Mesh** should accept any Geometry (2D or 3D) and offers 3D transformations
+	- Do we need a 2D version of Mesh? Perhaps **Sprite** which offers a 2D interface over **Mesh**
 
-new Float32Array() is very slow. Make efforts to minimize vector creation!
+## GLTools
+	- GL settings
+
 
 ------------------
 
