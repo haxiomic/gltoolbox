@@ -3,7 +3,7 @@ package gltoolbox.geometry;
 import gltoolbox.gl.GL;
 import gltoolbox.typedarray.Float32Array;
 
-class RegularPolygon extends Geometry2D{
+class RegularPolygonGeometry extends Geometry2D{
 
 	public var nSides(default, null):Int;
 
@@ -22,27 +22,29 @@ class RegularPolygon extends Geometry2D{
 		this.vertices = new Float32Array(2 * 3 * (nSides - 2));
 
 		//zig-zag triangular decomposition
-		//requires vertices in clockwise order
+		//requires convex vertices in clockwise order
 		var da = Math.PI * 2.0 / nSides;
-		var vOffset:Int = 0;
 
 		inline function vX(i:Int) return (Math.cos((i * da) + angle) * radius) + offsetX;
 		inline function vY(i:Int) return (Math.sin((i * da) + angle) * radius) + offsetY;
-		function addTriangle(a:Int, b:Int, c:Int){ /* do not inline; haxe bug #4463 */
-			this.vertices[vOffset++] = vX(a);
-			this.vertices[vOffset++] = vY(a);
-			this.vertices[vOffset++] = vX(b);
-			this.vertices[vOffset++] = vY(b);
-			this.vertices[vOffset++] = vX(c);
-			this.vertices[vOffset++] = vY(c);
-		}
 
-		var f:Int = 0;          //forward counter
+		var vOffset:Int = 0;
+		var a:Int = 0;          //forward counter
 		var b:Int = nSides - 1; //backward counter
 		var i:Int = 0;          //loop counter
 
-		while(f < b - 1){
-			addTriangle(f, b, ((i++ % 2) == 0 ? ++f : --b));
+		var _a, _b, _c;
+		while(a < b - 1){
+			_a = a;
+			_b = b;
+			_c = ((i++ % 2) == 0 ? ++a : --b);
+			//add triangle _a, _b, _c
+			this.vertices[vOffset++] = vX(_a);
+			this.vertices[vOffset++] = vY(_a);
+			this.vertices[vOffset++] = vX(_b);
+			this.vertices[vOffset++] = vY(_b);
+			this.vertices[vOffset++] = vX(_c);
+			this.vertices[vOffset++] = vY(_c);
 		}
 
 		this.drawMode = GL.TRIANGLES;

@@ -3,7 +3,7 @@ package gltoolbox.geometry;
 import gltoolbox.gl.GL;
 import gltoolbox.typedarray.Float32Array;
 
-class Rectangle extends Geometry2D{
+class RectangleGeometry extends Geometry2D{
 
 	public function new(originX:Float, originY:Float, width:Float, height:Float){
 		super();
