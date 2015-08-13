@@ -15,11 +15,15 @@ abstract Vec4(VectorDataType) from VectorDataType{
 		set(x, y, z, w);
 	}
 
-	public inline function set(x:Float, y:Float, z:Float, w:Float):Vec4{
-		set_x(x);
-		set_y(y);
-		set_z(z);
-		set_w(w);
+	public inline function set(?xyzw:Vec4, x:Float, y:Float, z:Float, w:Float):Vec4{
+		if(xyzw != null){
+			each(function(t:Vec2, i:Int) this[i] += xyzw[i]);
+		}else{
+			set_x(x);
+			set_y(y);
+			set_z(z);
+			set_w(w);
+		}
 		return this;
 	}
 

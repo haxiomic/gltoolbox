@@ -1,102 +1,127 @@
+/*
+	Two channels,
+	1 - Obvious, public facing .worldMatrix and .localMatrix
+
+	2 - Cache controlled, doesn't account for changes to .localMatrix; used when there is knowledge of no changes
+		- this means recalculating every draw, which is unnecessary
+		- instead I think the interface should be designed to enforce triggering bool when values are changed
+	
+	updateLocalMatrix()
+	updateWorldMatrix()
+	
+	var cacheInvalid;
+	getWorldMatrixCached
+	getLocalMatrixCached
+*/
+
 package gltoolbox.object;
 
 import gltoolbox.math.Mat4;
 
 class Object3D{
+	
+	//aliases to localMatrix data
+	public var x(get, set):Float;
+	public var y(get, set):Float;
+	public var z(get, set):Float;
 
-	public var x:Float;
-	public var y:Float;
-	public var z:Float;
-	public var position:Vec3;
-	public var rotation:Vec3;
-	public var scale:Vec3;
+	public var scaleX(get, set):Float;
+	public var scaleY(get, set):Float;
+	public var scaleZ(get, set):Float;
 
-	public var localMatrix(get, null):Mat4;
-	public var worldMatrix(get, null):Mat4;
+	//@! how to handle rotation?
+
+	//@! enforce @:isVar ?
+	public var localMatrix(get, set):Mat4;//requires worldMatrixNeedsUpdate true when modified
+	public var worldMatrix(get, null):Mat4;//computed from hierarchy
+
 	public var children:Array<Object3D>;
 	public var parent(get, null):Object3D;
 
 	public var worldMatrixNeedsUpdate:Bool;
 
-	public function new(){
+	//private
 
+	public function new(){
+		localMatrix = (new Mat4()).identity();
 	}
 
-	public function add(child:Object3D):Object3D{
+	public inline function add(child:Object3D):Object3D{
 		children.push(child);
 		return this;
 	}
 
-	public function remove(child:Object3D):Object3D{
+	public inline function remove(child:Object3D):Object3D{
 		var i = children.indexOf(child);
 		children.splice(i, 1);
+		return this;
+	}
+
+	//convenience
+	public inline function setXYZ(x:Float, y:Float, z:Float):Object3D{
+		worldMatrixNeedsUpdate = true;
+		localMatrix.x = x;
+		localMatrix.y = y;
+		localMatrix.z = z;
+		return this;
+	}
+
+	public inline function setScaleXYZ(scaleX:Float, scaleY:Float, scaleZ:Float):Object3D{
+		worldMatrixNeedsUpdate = true;
+		localMatrix.scaleX = scaleX;
+		localMatrix.scaleY = scaleY;
+		localMatrix.scaleZ = scaleZ;
+		return this;
 	}
 
 	//properties
 	//position alias
-	private inline function get_x():Float return position.x;
-	private inline function get_y():Float return position.y;
-	private inline function get_z():Float return position.z;
-	private inline function set_x(v:Float):Float return position.x = v;
-	private inline function set_y(v:Float):Float return position.y = v;
-	private inline function set_z(v:Float):Float return position.z = v;
+	private inline function get_x():Float return localMatrix.x;
+	private inline function get_y():Float return localMatrix.y;
+	private inline function get_z():Float return localMatrix.z;
+	private inline function set_x(v:Float):Float{
+		worldMatrixNeedsUpdate = true;
+		return localMatrix.x = v;
+	}
+	private inline function set_y(v:Float):Float{
+		worldMatrixNeedsUpdate = true;
+		return localMatrix.y = v;
+	}
+	private inline function set_z(v:Float):Float{
+		worldMatrixNeedsUpdate = true;
+		return localMatrix.z = v;
+	}
 
-	private function get_worldMatrix():Mat4{
+	//scale alias
+	private inline function get_scaleX():Float return localMatrix.scaleX;
+	private inline function get_scaleY():Float return localMatrix.scaleY;
+	private inline function get_scaleZ():Float return localMatrix.scaleZ;
+	private inline function set_scaleX(v:Float):Float{
+		worldMatrixNeedsUpdate = true;
+		return localMatrix.scaleX = v;
+	}
+	private inline function set_scaleY(v:Float):Float{
+		worldMatrixNeedsUpdate = true;
+		return localMatrix.scaleY = v;
+	}
+	private inline function set_scaleZ(v:Float):Float{
+		worldMatrixNeedsUpdate = true;
+		return localMatrix.scaleZ = v;
+	}
+
+	//@! rotation alias
+
+	private inline function set_localMatrix(mat4:Mat4):Mat4{
+		worldMatrixNeedsUpdate = true;
+		return localMatrix = mat4;
+	}
+
+	private inline function get_worldMatrix():Mat4{
 		throw 'todo';
-		//if worldMatrixNeedsUpdate
+		if(worldMatrixNeedsUpdate){
 			//worldMatrix = parent.worldMatrix * localMatrix
-			//update cache
-		//return cache
-		return null;
-	}
-
-	private function get_localMatrix():Mat4{
-		//compose from pos, rot, scale, quat
-		throw 'todo';
-		return null;
-	}
-
-	private function set_localMatrix(matrix:Mat4):Mat4{
-		//decompose into pos, rot, scale, quat
-		throw 'todo';
-		return null;
+		}
+		return worldMatrix;
 	}
 
 }
-
-//if mat4 was a class
-class ObsvMat4 extends mat4{
-	var callback:fn;
-
-	@:arrayWrite function(i, v){
-		callback();
-		elements[i] = v;
-	}
-}
-
-localMatrix.onChange(function(){needsUpdate = true;});
-
-
-/*
-	#Invalidating the world matrix
-	- change any part of local matrix
-	- reassign the local matrix (easy)
-
-	1. how to detect change to local matrix?
-	2. how to invalidate children efficiently?
-
-	----
-	Option 1,
-
-	Some clever observable versions of Vectors
-
-	Option 2,
-
-	Cache a copy of localMatrix the last time worldMatrix was updated, when we run get_worldMatrix, compare values
-	(no worldMatrixNeedsUpdate)
-	-> this works, but it means comparing 16 values in each object up the tree when we run get_worldMatrix
-*/
-
-/*
-	three.js has updateMatrixWorld which updates all children down the tree
-*/

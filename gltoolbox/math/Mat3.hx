@@ -1,21 +1,44 @@
+/*
+	Mat3
+
+	row-major order
+*/
+
 package gltoolbox.math;
 
 abstract Mat3(VectorDataType) from VectorDataType{
 
-	public inline function new(){
+	public inline function new(
+		n11:Float = 1, n12:Float = 0, n13:Float = 0,
+		n21:Float = 0, n22:Float = 1, n23:Float = 0,
+		n31:Float = 0, n32:Float = 0, n33:Float = 1
+	){
 		this = new VectorDataType(9);
-		identity();
+		set(
+			n11, n12, n13,
+			n21, n22, n23,
+			n31, n32, n33
+		);
 	}
 
 	public inline function set(
+		?mat3:Mat3,
 		n11:Float, n12:Float, n13:Float,
 		n21:Float, n22:Float, n23:Float,
 		n31:Float, n32:Float, n33:Float
 	):Mat3{
-		this[0] = n11; this[3] = n12; this[6] = n13;
-		this[1] = n21; this[4] = n22; this[7] = n23;
-		this[2] = n31; this[5] = n32; this[8] = n33;
+		if(mat3 != null){
+			each(function(t:Mat3, idx:Int, _, _) this[idx] = mat3[idx] );		
+		}else{		
+			this[0] = n11; this[3] = n12; this[6] = n13;
+			this[1] = n21; this[4] = n22; this[7] = n23;
+			this[2] = n31; this[5] = n32; this[8] = n33;
+		}
 		return this;
+	}
+
+	public inline function get(row:Int, col:Int):Float{
+		return this[(col - 1)*3 + (row - 1)];
 	}
 
 	public inline function each(fn:Mat3->Int->Int->Int->Void):Mat3{
@@ -28,16 +51,16 @@ abstract Mat3(VectorDataType) from VectorDataType{
 	}
 
 	public function identity():Mat3{
-		each(function(t:Mat3, idx:Int, i:Int, j:Int) this[idx] = (i == j ? 1 : 0) );
+		each(function(t:Mat3, idx:Int, row:Int, col:Int) this[idx] = (col == row ? 1 : 0) );
 		return this;
 	}
 
 	public function multiplyScalar(s:Float):Mat3{
-		each(function(t:Mat3, idx:Int, i:Int, j:Int) this[idx] *= s );
+		each(function(t:Mat3, idx:Int, row:Int, col:Int) this[idx] *= s );
 		return this;
 	}
 
-	public inline function deviceScalar(s:Float):Mat3{
+	public inline function divdeScalar(s:Float):Mat3{
 		var invS = 1/s;
 		multiplyScalar(invS);
 		return this;

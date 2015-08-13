@@ -13,10 +13,14 @@ abstract Vec3(VectorDataType) from VectorDataType{
 		set(x, y, z);
 	}
 
-	public inline function set(x:Float, y:Float, z:Float):Vec3{
-		set_x(x);
-		set_y(y);
-		set_z(z);
+	public inline function set(?xyz:Vec3, x:Float, y:Float, z:Float):Vec3{
+		if(xyz != null){
+			each(function(t:Vec2, i:Int) this[i] += xyz[i]);
+		}else{
+			set_x(x);
+			set_y(y);
+			set_z(z);
+		}
 		return this;
 	}
 

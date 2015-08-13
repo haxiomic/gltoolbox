@@ -1,10 +1,7 @@
 #Dev Notes
 
 ## Misc Unresolved
-	- Observable Vectors?
-		-> Vectors should be classes to make them extendable.
 	- Rename GLTools to GPUInterface, try to be non-gl specific in naming?
-	- Detect changes to properties of a property efficiently?
 	- .gpuObjects to store gpu references seperatly from other properties?
 	- Need to distinguish between buffers and objects
 	- Chainability should be present everywhere
@@ -13,6 +10,12 @@
 	- How to distinguish between attribute and attribute data and same for uniforms (ie, what type should be on Shader and what type on geometry). enum AttributeType? enum AttributeData?
 	- How to implement blending?
 	- Passing 2D vertices to vec3 position should work
+
+## Math
+	- Mat4, transformation matrix functions
+		- .xyz and .scaleX, .scaleY, .scaleZ?
+	- Quat
+	- fromArray convenience (Array<Float>)
 
 ## Textures
 	- Simple texture class that stores texture parameters along with GLTexture
@@ -42,6 +45,10 @@
 ## GLTools
 	- GL settings
 
+
+#Resolved Points
+	- Observable Vectors?
+		-> NO, keep with abstract vectors and design api to enforce observability elsewhere
 
 ------------------
 

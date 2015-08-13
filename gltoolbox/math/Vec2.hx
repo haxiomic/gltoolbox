@@ -11,9 +11,13 @@ abstract Vec2(VectorDataType) from VectorDataType{
 		set(x, y);
 	}
 
-	public inline function set(x:Float, y:Float):Vec2{
-		set_x(x);
-		set_y(y);
+	public inline function set(?xy:Vec2, x:Float, y:Float):Vec2{
+		if(xy != null){
+			each(function(t:Vec2, i:Int) this[i] += xy[i]);
+		}else{
+			set_x(x);
+			set_y(y);
+		}
 		return this;
 	}
 
