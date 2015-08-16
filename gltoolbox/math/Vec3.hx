@@ -9,7 +9,7 @@ abstract Vec3(VectorDataType) from VectorDataType{
 	public inline function new(x:Float = 0, ?y:Float, ?z:Float){
 		this = new VectorDataType(3);
 		if(y == null) y = x;
-		if(z == null) z = x;
+		if(z == null) z = y;
 		set(x, y, z);
 	}
 

@@ -10,8 +10,8 @@ abstract Vec4(VectorDataType) from VectorDataType{
 	public inline function new(x:Float = 0, ?y:Float, ?z:Float, ?w:Float){
 		this = new VectorDataType(4);
 		if(y == null) y = x;
-		if(z == null) z = x;
-		if(w == null) w = x;
+		if(z == null) z = y;
+		if(w == null) w = z;
 		set(x, y, z, w);
 	}
 

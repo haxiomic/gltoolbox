@@ -32,7 +32,7 @@ class Object3D{
 	//@! how to handle rotation?
 
 	//@! enforce @:isVar ?
-	public var localMatrix(get, set):Mat4;//requires worldMatrixNeedsUpdate true when modified
+	public var localMatrix(default, set):Mat4;//requires worldMatrixNeedsUpdate true when modified
 	public var worldMatrix(get, null):Mat4;//computed from hierarchy
 
 	public var children:Array<Object3D>;
@@ -44,6 +44,7 @@ class Object3D{
 
 	public function new(){
 		localMatrix = (new Mat4()).identity();
+		worldMatrixNeedsUpdate = true;
 	}
 
 	public inline function add(child:Object3D):Object3D{
@@ -57,8 +58,20 @@ class Object3D{
 		return this;
 	}
 
+	public function clone():Object3D{
+		//@! need to check
+		var o = new Object3D();
+		o.parent = parent;
+		o.localMatrix = localMatrix.clone();
+		o.children = o.children.copy();
+		return o;
+	}
+
 	//convenience
-	public inline function setXYZ(x:Float, y:Float, z:Float):Object3D{
+	public inline function setXYZ(x:Float, ?y:Float, ?z:Float):Object3D{
+		if(y == null) y = x;
+		if(z == null) z = y;
+
 		worldMatrixNeedsUpdate = true;
 		localMatrix.x = x;
 		localMatrix.y = y;
@@ -66,7 +79,10 @@ class Object3D{
 		return this;
 	}
 
-	public inline function setScaleXYZ(scaleX:Float, scaleY:Float, scaleZ:Float):Object3D{
+	public inline function setScaleXYZ(scaleX:Float , ?scaleY:Float, ?scaleZ:Float):Object3D{
+		if(scaleY == null) scaleY = scaleX;
+		if(scaleZ == null) scaleZ = scaleY;
+
 		worldMatrixNeedsUpdate = true;
 		localMatrix.scaleX = scaleX;
 		localMatrix.scaleY = scaleY;

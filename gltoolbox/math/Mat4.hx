@@ -179,14 +179,36 @@ abstract Mat4(VectorDataType) from VectorDataType{
 
 
 	/* Mat4 static */
+
+	//Useful transformation matrices
+	@:impl
+	static public function makeTranslation(?mat4:Mat4, ?vec3:Vec3, x:Float = 0, y:Float = 0, z:Float = 0):Mat4{
+		if(mat4 == null) mat4 = new Mat4();
+		if(vec3 != null){
+			x = vec3.x;
+			y = vec3.y;
+			z = vec3.z;
+		}
+		mat4.set(
+			1, 0, 0, x,
+			0, 1, 0, y,
+			0, 0, 1, z,
+			0, 0, 0, 1
+		);
+		return mat4;
+	}
+
 	@:impl
 	static public function makeRotationX(?mat4:Mat4, theta:Float):Mat4{
 		if(mat4 == null) mat4 = new Mat4();
 		var c = Math.cos(theta);
 		var s = Math.sin(theta);
-		this[0] = 1; this[4] = 0; this[8]  =  0;
-		this[1] = 0; this[5] = c; this[9]  = -s;
-		this[2] = 0; this[6] = s; this[10] =  c;
+		mat4.set(
+			1, 0,  0, 0,
+			0, c, -s, 0,
+			0, s,  c, 0,
+			0, 0,  0, 1
+		);
 		return mat4;
 	}
 
@@ -195,9 +217,12 @@ abstract Mat4(VectorDataType) from VectorDataType{
 		if(mat4 == null) mat4 = new Mat4();
 		var c = Math.cos(theta);
 		var s = Math.sin(theta);
-		this[0] =  c; this[4] = 0; this[8]  = s;
-		this[1] =  0; this[5] = 1; this[9]  = 0;
-		this[2] = -s; this[6] = 0; this[10] = c;
+		mat4.set(
+			 c, 0, s, 0,
+			 0, 1, 0, 0,
+			-s, 0, c, 0,
+			 0, 0, 0, 1
+		);
 		return mat4;
 	}
 
@@ -206,9 +231,12 @@ abstract Mat4(VectorDataType) from VectorDataType{
 		if(mat4 == null) mat4 = new Mat4();
 		var c = Math.cos(theta);
 		var s = Math.sin(theta);
-		this[0] = c; this[4] = -s; this[8]  = 0;
-		this[1] = s; this[5] =  c; this[9]  = 0;
-		this[2] = 0; this[6] =  0; this[10] = 1;
+		mat4.set(
+			c, -s, 0, 0,
+			s,  c, 0, 0,
+			0,  0, 1, 0,
+			0,  0, 0, 1
+		);
 		return mat4;
 	}
 
