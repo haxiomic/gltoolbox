@@ -10,4 +10,6 @@ typedef Uint8Array = nme.utils.Uint8Array;
 // ...
 #elseif js
 typedef Uint8Array = js.html.Uint8Array;
+#else
+typedef Uint8Array = haxe.io.Uint8Array;
 #end

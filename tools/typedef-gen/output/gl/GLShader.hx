@@ -1,7 +1,6 @@
 package gltoolbox.gl;
 
 #if snow
-import sys.io.File;now
 typedef GLShader = snow.modules.opengl.GL.GLShader;
 #elseif lime
 typedef GLShader = lime.graphics.opengl.GLShader;
@@ -11,4 +10,6 @@ typedef GLShader = nme.gl.GLShader;
 typedef GLShader = sdl.GL.Shader;
 #elseif js
 typedef GLShader = js.html.webgl.Shader;
+#else
+typedef GLShader = Dynamic;
 #end

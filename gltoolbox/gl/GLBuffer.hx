@@ -10,4 +10,6 @@ typedef GLBuffer = nme.gl.GLBuffer;
 typedef GLBuffer = sdl.GL.Buffer;
 #elseif js
 typedef GLBuffer = js.html.webgl.Buffer;
+#else
+typedef GLBuffer = Dynamic;
 #end

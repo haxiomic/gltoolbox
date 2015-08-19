@@ -10,4 +10,6 @@ typedef GLProgram = nme.gl.GLProgram;
 typedef GLProgram = sdl.GL.Program;
 #elseif js
 typedef GLProgram = js.html.webgl.Program;
+#else
+typedef GLProgram = Dynamic;
 #end

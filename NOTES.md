@@ -10,6 +10,7 @@
 	- How to implement blending?
 	- Passing 2D vertices to vec3 position should work
 	- Support for dynamic attribute data. See BufferAttributeData
+	- toString()s for all objects
 
 ## Math
 	- Review Euler swappedIdx() gives the correct behavior

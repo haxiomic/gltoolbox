@@ -1,7 +1,6 @@
 package gltoolbox.gl;
 
 #if snow
-import sys.io.File;now
 typedef GLBuffer = snow.modules.opengl.GL.GLBuffer;
 #elseif lime
 typedef GLBuffer = lime.graphics.opengl.GLBuffer;
@@ -11,4 +10,6 @@ typedef GLBuffer = nme.gl.GLBuffer;
 typedef GLBuffer = sdl.GL.Buffer;
 #elseif js
 typedef GLBuffer = js.html.webgl.Buffer;
+#else
+typedef GLBuffer = Dynamic;
 #end

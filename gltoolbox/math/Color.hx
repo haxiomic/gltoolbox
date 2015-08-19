@@ -39,7 +39,9 @@ abstract Color(Vec3) from Vec3 to Vec3{
 		return StringTools.hex(getHex(), 6);
 	}
 
-	//@! todo .clone()
+	public inline function clone():Color{
+		return new Color(r, g, b);
+	}
 
 	//properties
 	inline function get_r():Float return this.x;

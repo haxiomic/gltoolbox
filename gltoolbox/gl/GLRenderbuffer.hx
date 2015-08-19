@@ -10,4 +10,6 @@ typedef GLRenderbuffer = nme.gl.GLRenderbuffer;
 typedef GLRenderbuffer = sdl.GL.Renderbuffer;
 #elseif js
 typedef GLRenderbuffer = js.html.webgl.Renderbuffer;
+#else
+typedef GLRenderbuffer = Dynamic;
 #end

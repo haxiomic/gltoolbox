@@ -10,4 +10,6 @@ typedef ArrayBufferView = nme.utils.ArrayBufferView;
 // ...
 #elseif js
 typedef ArrayBufferView = js.html.ArrayBufferView;
+#else
+typedef ArrayBufferView = haxe.io.ArrayBufferView;
 #end

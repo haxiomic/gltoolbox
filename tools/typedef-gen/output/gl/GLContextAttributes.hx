@@ -1,7 +1,6 @@
 package gltoolbox.gl;
 
 #if snow
-import sys.io.File;now
 typedef GLContextAttributes = snow.modules.opengl.GL.GLContextAttributes;
 #elseif lime
 typedef GLContextAttributes = lime.graphics.opengl.GLContextAttributes;
@@ -11,4 +10,6 @@ typedef GLContextAttributes = nme.gl.GLContextAttributes;
 typedef GLContextAttributes = sdl.GL.ContextAttributes;
 #elseif js
 typedef GLContextAttributes = js.html.webgl.ContextAttributes;
+#else
+typedef GLContextAttributes = Dynamic;
 #end

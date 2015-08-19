@@ -191,6 +191,23 @@ abstract Mat4(VectorDataType) from VectorDataType{
 	}
 
 	public function compose(position:Vec3, rotation:Orientation, scale:Vec3):Mat4{
+		/*
+		if rotation didn't eliminate position:
+
+		if(scale == null && rotation == null){
+			//nothing more to do (assuming position has been set)
+			return this;
+		}else if(scale == null){
+			//extract current scale
+			scale = new Vec3();
+			decompose(null, null, scale);
+		}else if(rotation == null){
+			//extract current rotation
+			rotation = new Mat4();
+			decompose(null, rotation, null);
+		}
+		*/
+
 		//rotation
 		switch rotation{
 			case Quat(q):
@@ -212,35 +229,40 @@ abstract Mat4(VectorDataType) from VectorDataType{
 		return this;
 	}
 
-	public function decompose(position:Vec3, rotation:Orientation, scale:Vec3):Mat4{
-		var vec3:Vec3 = new Vec3();
-		var mat4:Mat4 = new Mat4();
-
-		var sx = vec3.set(this[0], this[1], this[2]).length();
-		var sy = vec3.set(this[4], this[5], this[6]).length();
-		var sz = vec3.set(this[8], this[9], this[10]).length();
+	public function decompose(?position:Vec3, ?rotation:Orientation, ?scale:Vec3):Mat4{
+		inline function length(a:Float, b:Float, c:Float) return Math.sqrt(a*a + b*b + c*c);
+		var sx = length(this[0], this[1], this[2]);
+		var sy = length(this[4], this[5], this[6]);
+		var sz = length(this[8], this[9], this[10]);
 
 		var det = determinant();
 		if(det < 0) sx = -sx;
 
 		//position
-		position.set(x,y,z);
+		if(position != null){
+			position.set(x,y,z);
+		}
 
 		//rotation
-		mat4.setFromMat4(this);
+		if(rotation != null){		
+			var mat4:Mat4 = new Mat4();
+			mat4.setFromMat4(this);
 
-		var invSX = 1/sx;
-		var invSY = 1/sy;
-		var invSZ = 1/sz;
+			var invSX = 1/sx;
+			var invSY = 1/sy;
+			var invSZ = 1/sz;
 
-		mat4[0] *= invSX; mat4[4] *= invSY; mat4[8] *= invSZ;
-		mat4[1] *= invSX; mat4[5] *= invSY; mat4[9] *= invSZ;
-		mat4[2] *= invSX; mat4[6] *= invSY; mat4[10] *= invSZ;
+			mat4[0] *= invSX; mat4[4] *= invSY; mat4[8] *= invSZ;
+			mat4[1] *= invSX; mat4[5] *= invSY; mat4[9] *= invSZ;
+			mat4[2] *= invSX; mat4[6] *= invSY; mat4[10] *= invSZ;
 
-		rotation.setFromMat4(mat4);
+			rotation.setFromMat4(mat4);
+		}
 
 		//scale
-		scale.set(sx, sy, sz);
+		if(scale != null){
+			scale.set(sx, sy, sz);
+		}
 
 		return this;
 	}
@@ -255,7 +277,7 @@ abstract Mat4(VectorDataType) from VectorDataType{
 
 	/* ------------------------------- */
 
-	public function clone():Mat4{
+	public inline function clone():Mat4{
 		return (new Mat4()).setFromMat4(this);
 	}
 

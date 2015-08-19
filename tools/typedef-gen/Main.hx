@@ -38,13 +38,12 @@ class Main{
 
 		for(name in names){
 			var filename = '$name.hx';
-			File.saveContent(dir+'/'+filename, typedArrayModule(name, 'gltoolbox.typedarray'));
 			trace('saving $filename');
+			File.saveContent(dir+'/'+filename, typedArrayModule(name, 'gltoolbox.typedarray'));
 		}
 
 		//GL
 		names = [
-			//'GL',
 			'GLActiveInfo',
 			'GLBuffer',
 			'GLContextAttributes',
@@ -62,10 +61,19 @@ class Main{
 
 		for(name in names){
 			var filename = '$name.hx';
-			File.saveContent(dir+'/'+filename, glModule(name, 'gltoolbox.gl'));
-
 			trace('saving $filename');
+			File.saveContent(dir+'/'+filename, glModule(name, 'gltoolbox.gl'));
 		}
+
+		//special
+		inline function copy(src:String, dst:String){
+			// var srcPath = (new haxe.io.Path(src));
+			trace('copying $src');
+			File.copy(src, dst+'/'+haxe.io.Path.withoutDirectory(src));
+		}
+
+		copy('special/gl/GL.hx', '$outdir/gl/');
+		copy('special/gl/GLShaderPrecisionFormat.hx', '$outdir/gl/');
 	}
 
 
@@ -82,6 +90,8 @@ typedef $name = nme.utils.$name;
 // ...
 #elseif js
 typedef $name = js.html.$name;
+#else
+typedef $name = haxe.io.$name;
 #end
 ';
 	}
@@ -92,7 +102,6 @@ typedef $name = js.html.$name;
 		var str = 'package $packageStr;
 
 #if snow
-import sys.io.File;now
 typedef $name = snow.modules.opengl.GL.$name;
 #elseif lime
 typedef $name = lime.graphics.opengl.$name;
@@ -102,6 +111,8 @@ typedef $name = nme.gl.$name;
 typedef $name = sdl.GL.$nameWithoutPrefix;
 #elseif js
 typedef $name = js.html.webgl.$nameWithoutPrefix;
+#else
+typedef $name = Dynamic;
 #end';
 		
 		return str;

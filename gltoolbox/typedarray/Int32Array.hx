@@ -10,4 +10,6 @@ typedef Int32Array = nme.utils.Int32Array;
 // ...
 #elseif js
 typedef Int32Array = js.html.Int32Array;
+#else
+typedef Int32Array = haxe.io.Int32Array;
 #end

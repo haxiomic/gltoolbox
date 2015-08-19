@@ -10,4 +10,6 @@ typedef Float32Array = nme.utils.Float32Array;
 // ...
 #elseif js
 typedef Float32Array = js.html.Float32Array;
+#else
+typedef Float32Array = haxe.io.Float32Array;
 #end

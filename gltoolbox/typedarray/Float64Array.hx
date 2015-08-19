@@ -10,4 +10,6 @@ typedef Float64Array = nme.utils.Float64Array;
 // ...
 #elseif js
 typedef Float64Array = js.html.Float64Array;
+#else
+typedef Float64Array = haxe.io.Float64Array;
 #end

@@ -1,7 +1,6 @@
 package gltoolbox.gl;
 
 #if snow
-import sys.io.File;now
 typedef GLTexture = snow.modules.opengl.GL.GLTexture;
 #elseif lime
 typedef GLTexture = lime.graphics.opengl.GLTexture;
@@ -11,4 +10,6 @@ typedef GLTexture = nme.gl.GLTexture;
 typedef GLTexture = sdl.GL.Texture;
 #elseif js
 typedef GLTexture = js.html.webgl.Texture;
+#else
+typedef GLTexture = Dynamic;
 #end

@@ -10,4 +10,6 @@ typedef GLContextAttributes = nme.gl.GLContextAttributes;
 typedef GLContextAttributes = sdl.GL.ContextAttributes;
 #elseif js
 typedef GLContextAttributes = js.html.webgl.ContextAttributes;
+#else
+typedef GLContextAttributes = Dynamic;
 #end

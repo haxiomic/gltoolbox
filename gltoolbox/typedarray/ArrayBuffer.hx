@@ -10,4 +10,6 @@ typedef ArrayBuffer = nme.utils.ArrayBuffer;
 // ...
 #elseif js
 typedef ArrayBuffer = js.html.ArrayBuffer;
+#else
+typedef ArrayBuffer = haxe.io.ArrayBuffer;
 #end

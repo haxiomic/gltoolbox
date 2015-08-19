@@ -10,4 +10,6 @@ typedef GLActiveInfo = nme.gl.GLActiveInfo;
 typedef GLActiveInfo = sdl.GL.ActiveInfo;
 #elseif js
 typedef GLActiveInfo = js.html.webgl.ActiveInfo;
+#else
+typedef GLActiveInfo = Dynamic;
 #end

@@ -87,12 +87,8 @@ abstract Mat3(VectorDataType) from VectorDataType{
 		return this;
 	}
 
-	public function clone():Mat3{
-		return (new Mat3()).set(
-			this[0], this[3], this[6],
-			this[1], this[4], this[7],
-			this[2], this[5], this[8]
-		);
+	public inline function clone():Mat3{
+		return (new Mat3()).setFromMat3(this);
 	}
 
 	//array access

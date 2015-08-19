@@ -10,4 +10,6 @@ typedef GLFramebuffer = nme.gl.GLFramebuffer;
 typedef GLFramebuffer = sdl.GL.Framebuffer;
 #elseif js
 typedef GLFramebuffer = js.html.webgl.Framebuffer;
+#else
+typedef GLFramebuffer = Dynamic;
 #end

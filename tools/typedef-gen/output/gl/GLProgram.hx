@@ -1,7 +1,6 @@
 package gltoolbox.gl;
 
 #if snow
-import sys.io.File;now
 typedef GLProgram = snow.modules.opengl.GL.GLProgram;
 #elseif lime
 typedef GLProgram = lime.graphics.opengl.GLProgram;
@@ -11,4 +10,6 @@ typedef GLProgram = nme.gl.GLProgram;
 typedef GLProgram = sdl.GL.Program;
 #elseif js
 typedef GLProgram = js.html.webgl.Program;
+#else
+typedef GLProgram = Dynamic;
 #end

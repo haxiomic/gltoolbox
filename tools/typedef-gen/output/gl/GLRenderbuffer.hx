@@ -1,7 +1,6 @@
 package gltoolbox.gl;
 
 #if snow
-import sys.io.File;now
 typedef GLRenderbuffer = snow.modules.opengl.GL.GLRenderbuffer;
 #elseif lime
 typedef GLRenderbuffer = lime.graphics.opengl.GLRenderbuffer;
@@ -11,4 +10,6 @@ typedef GLRenderbuffer = nme.gl.GLRenderbuffer;
 typedef GLRenderbuffer = sdl.GL.Renderbuffer;
 #elseif js
 typedef GLRenderbuffer = js.html.webgl.Renderbuffer;
+#else
+typedef GLRenderbuffer = Dynamic;
 #end

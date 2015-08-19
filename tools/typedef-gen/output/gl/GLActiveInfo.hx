@@ -1,7 +1,6 @@
 package gltoolbox.gl;
 
 #if snow
-import sys.io.File;now
 typedef GLActiveInfo = snow.modules.opengl.GL.GLActiveInfo;
 #elseif lime
 typedef GLActiveInfo = lime.graphics.opengl.GLActiveInfo;
@@ -11,4 +10,6 @@ typedef GLActiveInfo = nme.gl.GLActiveInfo;
 typedef GLActiveInfo = sdl.GL.ActiveInfo;
 #elseif js
 typedef GLActiveInfo = js.html.webgl.ActiveInfo;
+#else
+typedef GLActiveInfo = Dynamic;
 #end

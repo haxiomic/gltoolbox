@@ -10,4 +10,6 @@ typedef GLShader = nme.gl.GLShader;
 typedef GLShader = sdl.GL.Shader;
 #elseif js
 typedef GLShader = js.html.webgl.Shader;
+#else
+typedef GLShader = Dynamic;
 #end

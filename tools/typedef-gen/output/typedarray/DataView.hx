@@ -10,4 +10,6 @@ typedef DataView = nme.utils.DataView;
 // ...
 #elseif js
 typedef DataView = js.html.DataView;
+#else
+typedef DataView = haxe.io.DataView;
 #end

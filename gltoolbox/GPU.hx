@@ -58,7 +58,7 @@ class GPU{
 	}
 
 	//Buffer Tools
-	static public function uploadArray(typedArray:ArrayBufferView, usage:Int = GL.STATIC_DRAW, allowCaching:Bool = false):GLBuffer{
+	static public function uploadArray(typedArray:ArrayBufferView, usage:Int = GL.STATIC_DRAW):GLBuffer{
 		var buffer:GLBuffer;
 
 		var buffer = GL.createBuffer();

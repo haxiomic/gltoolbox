@@ -36,8 +36,10 @@ class Main extends snow.App {
 		init();
 		app.window.onrender = render;
 	}
-
-
+	override function update(dt:Float){
+		mainLoop(dt);
+	}
+	
 	//app code
 	var timeStart:Float = 0;
 	var clearColor:Color;
@@ -59,7 +61,9 @@ class Main extends snow.App {
 		GL.clearColor(clearColor.r, clearColor.g, clearColor.b, 1.0);
 		GL.disable(GL.CULL_FACE);
 
-		//create and upload geometry
+		//objects
+		scene = new Object3D();
+
 		mesh1 = new Mesh(new RectangleGeometry(-0.25, -0.25, 0.5, 0.5), null);
 		mesh1.rotationZ = 0.2;
 
@@ -81,6 +85,7 @@ class Main extends snow.App {
 		mesh1.add(mesh4);
 		mesh4.add(mesh5);
 
+		scene.add(mesh1);
 
 		//test mesh3 world decompose
 		var p = new Vec3();
@@ -145,7 +150,7 @@ class Main extends snow.App {
 		}
 	}
 
-	override inline function update(dt:Float){
+	inline function mainLoop(dt:Float){
 		var time = (haxe.Timer.stamp() - timeStart);
 		time = time * 0.5;
 
@@ -160,56 +165,63 @@ class Main extends snow.App {
 
 	}
 
+
+	var currentProgram:GLProgram;
 	inline function render(window:Window){
 
 		GL.viewport(0, 0, window.width, window.height);
-
 		GL.clear(GL.COLOR_BUFFER_BIT);
 
-		var currentProgram:GLProgram;
+		drawObject3D(scene);
+	}
 
-		function drawMesh(mesh:Mesh){
-			//bind mesh program
-			//@! tmp program type
-			if(programObject.program != currentProgram){
-				GL.useProgram(programObject.program);
-				currentProgram = programObject.program;
-			}
+	//drawing functions
+	function drawObject3D(object:Object3D){
+		switch Type.getClass(object){
+			case Mesh:
+				drawMesh(untyped object);
+		}
 
-			//pass transformation matrix as uniform
-			GL.uniformMatrix4fv(programObject.uniformLocations['modelMatrix'], false, mesh.worldMatrix);
+		for(c in object.children){
+			drawObject3D(c);
+		}
+	}
 
-			var geom = mesh.geometry;
+	function drawMesh(mesh:Mesh){
+		//bind mesh program
+		//@! tmp program type
+		if(programObject.program != currentProgram){
+			GL.useProgram(programObject.program);
+			currentProgram = programObject.program;
+		}
 
-			//select GPU buffers for attributes
-			for(name in programObject.attributeLocations.keys()){
-				//get the geometry attribute that matches the program attribute
-				var geoAttr = geom.attributes[name];
-				if(geoAttr == null) continue;
+		//pass transformation matrix as uniform
+		GL.uniformMatrix4fv(programObject.uniformLocations['modelMatrix'], false, mesh.worldMatrix);
 
-				switch geoAttr{
-					//buffer attribute
-					case BufferAttribute(data):
-						//upload to GPU if not already
-						if(data.buffer == null){
-							data.gpuUpload();
-						}
+		var geom = mesh.geometry;
 
-						GL.bindBuffer(GL.ARRAY_BUFFER, data.buffer);
-						GL.vertexAttribPointer(programObject.attributeLocations[name], data.itemSize, GL.FLOAT, false, 0, 0);
-					default:
-						throw 'Not implemented';
-				}
-			}
+		//select GPU buffers for attributes
+		for(name in programObject.attributeLocations.keys()){
+			//get the geometry attribute that matches the program attribute
+			var geoAttr = geom.attributes[name];
+			if(geoAttr == null) continue;
 
-			GL.drawArrays(geom.drawMode, 0, geom.vertexCount);
+			switch geoAttr{
+				//buffer attribute
+				case BufferAttribute(data):
+					//upload to GPU if not already
+					if(data.buffer == null){
+						data.gpuUpload();
+					}
 
-			for(c in mesh.children){
-				drawMesh(cast c);//@! shouldn't be cast; need type switch
+					GL.bindBuffer(GL.ARRAY_BUFFER, data.buffer);
+					GL.vertexAttribPointer(programObject.attributeLocations[name], data.itemSize, GL.FLOAT, false, 0, 0);
+				default:
+					throw 'Not implemented';
 			}
 		}
 
-		drawMesh(mesh1);
+		GL.drawArrays(geom.drawMode, 0, geom.vertexCount);
 	}
 
 }

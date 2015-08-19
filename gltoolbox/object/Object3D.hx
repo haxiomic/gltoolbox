@@ -154,21 +154,26 @@ class Object3D{
 	}
 
 	//local matrix
-	private var _xyz:Vec3 = new Vec3();
+	var _tmpVec3:Vec3 = new Vec3();
 	private inline function get_localMatrix():Mat4{
 		if(localMatrixNeedsUpdate){
-			//compose
-			_xyz.set(x,y,z);
-			_localMatrix.compose(_xyz, rotation, scale);
+			//compose (xyz handled in-place)
+			_tmpVec3.set(x, y, z);
+			_localMatrix.compose(_tmpVec3, rotation, scale);
+			localMatrixNeedsUpdate = false;
 		}
 		return _localMatrix;	
 	}
 
 	private inline function set_localMatrix(v:Mat4):Mat4{
-		//@! need to decompose rotation
-		throw 'incomplete: need to decompose matrix into properties';
+		_localMatrix = v;
+		//decompose into properties
+		_localMatrix.decompose(null, rotation, scale);
+
 		worldMatrixNeedsUpdate = true;
-		return _localMatrix = v;
+		localMatrixNeedsUpdate = false;
+
+		return _localMatrix;
 	}
 
 	//world matrix

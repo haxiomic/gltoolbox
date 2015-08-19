@@ -10,4 +10,6 @@ typedef GLUniformLocation = nme.gl.GLUniformLocation;
 typedef GLUniformLocation = sdl.GL.UniformLocation;
 #elseif js
 typedef GLUniformLocation = js.html.webgl.UniformLocation;
+#else
+typedef GLUniformLocation = Dynamic;
 #end

@@ -10,4 +10,6 @@ typedef Uint16Array = nme.utils.Uint16Array;
 // ...
 #elseif js
 typedef Uint16Array = js.html.Uint16Array;
+#else
+typedef Uint16Array = haxe.io.Uint16Array;
 #end
