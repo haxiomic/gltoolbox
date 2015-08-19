@@ -50,6 +50,12 @@ private class EulerClass{
 
 	public function new(?rotationX:Float, ?rotationY:Float, ?rotationZ:Float, order:Order = XYZ){
 		this.v = new Vec3(rotationX, rotationY, rotationZ);
+		
+		//@!
+		if(order != XYZ){
+			throw 'orders other than XYZ have yet to be tested';
+		}
+
 		this.order = order;
 	}
 

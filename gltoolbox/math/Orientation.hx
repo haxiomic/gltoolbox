@@ -22,6 +22,7 @@ abstract Orientation(OrientationType) from OrientationType to OrientationType {
 
 	//@! todo conversions
 	//@! should clone out instead of return this for consistent behavior?
+	//@! should convesions be on the objects instead so we don't need to create new objects?
 	@:to function toQuat():Quat{
 		switch this{
 			case Quat(q):
@@ -57,9 +58,27 @@ abstract Orientation(OrientationType) from OrientationType to OrientationType {
 	@:to function toMat4():Mat4{
 		switch this{
 			case Quat(q):
-				throw 'not implemented';
+				var qx = q.x, qy = q.y, qz = q.z, qw = q.w;
+				var x2 = qx + qx, y2 = qy + qy, z2 = qz + qz;
+				var xx = qx * x2, xy = qx * y2, xz = qx * z2;
+				var yy = qy * y2, yz = qy * z2, zz = qz * z2;
+				var wx = qw * x2, wy = qw * y2, wz = qw * z2;
+				return new Mat4(
+					1 - (yy + zz), xy - wz,       xz + wy,       0,
+					xy + wz,       1 - (xx + zz), yz - wx,       0,
+					xz - wy,       yz + wx,       1 - (xx + yy), 0,
+					0,             0,             0,             1
+				);
 			case Euler(e):
-				throw 'not implemented';
+				var cx = Math.cos(e.swappedX); var sx = Math.sin(e.swappedX);
+				var cy = Math.cos(e.swappedY); var sy = Math.sin(e.swappedY);
+				var cz = Math.cos(e.swappedZ); var sz = Math.sin(e.swappedZ);
+				return new Mat4(
+					 cy*cz,  cx*sz + sx*sy*cz, sx*sz - cx*sy*cz, 0,
+					-cy*sz,  cx*cz - sx*sy*sz, sx*cz + cx*sy*sz, 0,
+					 sy,    -sx*cy,            cx*cy,            0,
+					 0,      0,                0,                1
+				);
 			case Mat4(m):
 				return m;
 		}

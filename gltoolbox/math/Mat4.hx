@@ -93,10 +93,10 @@ abstract Mat4(VectorDataType) from VectorDataType to VectorDataType to Float32Ar
 	}
 
 	public function determinant():Float{
-		var n11 = this[0], n12 = this[4], n13 = this[8], n14 = this[12],
-		    n21 = this[1], n22 = this[5], n23 = this[9], n24 = this[13],
-		    n31 = this[2], n32 = this[6], n33 = this[10], n34 = this[14],
-		    n41 = this[3], n42 = this[7], n43 = this[11], n44 = this[15];
+		var n11 = this[0], n12 = this[4], n13 = this[8], n14 = this[12];
+		var n21 = this[1], n22 = this[5], n23 = this[9], n24 = this[13];
+		var n31 = this[2], n32 = this[6], n33 = this[10], n34 = this[14];
+		var n41 = this[3], n42 = this[7], n43 = this[11], n44 = this[15];
 		return (
 			n41 * (
 				   n14 * n23 * n32

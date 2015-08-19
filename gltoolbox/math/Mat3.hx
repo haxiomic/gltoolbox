@@ -73,9 +73,9 @@ abstract Mat3(VectorDataType) from VectorDataType to VectorDataType to Float32Ar
 	}
 
 	public function determinant():Float{
-		var a = this[0], b = this[1], c = this[ 2 ],
-			d = this[3], e = this[4], f = this[ 5 ],
-			g = this[6], h = this[7], i = this[ 8 ];
+		var a = this[0], b = this[1], c = this[2],
+		var d = this[3], e = this[4], f = this[5],
+		var g = this[6], h = this[7], i = this[8];
 		return a * e * i - a * f * h - b * d * i + b * f * g + c * d * h - c * e * g;
 	}
 

@@ -12,12 +12,14 @@
 	- Support for dynamic attribute data. See BufferAttributeData
 
 ## Math
-	- Review Euler swappedIdx() is correct
+	- Review Euler swappedIdx() gives the correct behavior
+		Potentially need to fix other algorithms that involve Eulers
 	- Remove inlines where unneeded
 	- Mat3 2d transformation functions?
 	- Some method of getting Euler angles from matrix, and use them for setRotationEuler defaults
 		http://staff.city.ac.uk/~sbbh653/publications/euler.pdf
 	- Orientation conversions
+		- maybe this should be handled on the objects so convesions can be done without creating new objects
 	- Color, from string (css style), from int
 
 ## Textures
@@ -41,6 +43,7 @@
 	- texture.clone() instead of texture factory
 
 ## Objects
+	- Type switching on children with enum wrap!
 	- **Mesh** should accept any Geometry (2D or 3D) and offers 3D transformations
 	- Do we need a 2D version of Mesh? Perhaps **Sprite** which offers a 2D interface over **Mesh**. Rotation alters rotation in screen space
 	- Camera
