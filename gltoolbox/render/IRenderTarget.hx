@@ -9,5 +9,6 @@ interface IRenderTarget{
 	public function activate():Void;
 	public function clear(mask:Int = GL.COLOR_BUFFER_BIT):Void;
 	public function resize(width:Int, height:Int):Void;
-	
+	public function clone():IRenderTarget;
+		
 }

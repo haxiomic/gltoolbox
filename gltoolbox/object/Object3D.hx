@@ -1,27 +1,13 @@
-/*
-	Two channels,
-	1 - Obvious, public facing .worldMatrix and .localMatrix
-
-	2 - Cache controlled, doesn't account for changes to .localMatrix; used when there is knowledge of no changes
-		- this means recalculating every draw, which is unnecessary
-		- instead I think the interface should be designed to enforce triggering bool when values are changed
-	
-	updateLocalMatrix()
-	updateWorldMatrix()
-	
-	var cacheInvalid;
-	getWorldMatrixCached
-	getLocalMatrixCached
-*/
-
 package gltoolbox.object;
 
 import gltoolbox.math.Mat4;
+import gltoolbox.math.Euler;
+import gltoolbox.math.Euler.Order;
+import gltoolbox.math.Vec3;
 
 class Object3D{
-	
-	//aliases to localMatrix data
-	public var x(get, set):Float;
+		
+	public var x(get, set):Float;//alias to localMatrix data
 	public var y(get, set):Float;
 	public var z(get, set):Float;
 
@@ -29,115 +15,177 @@ class Object3D{
 	public var scaleY(get, set):Float;
 	public var scaleZ(get, set):Float;
 
-	//@! how to handle rotation?
+	public var rotationX(get, set):Float;
+	public var rotationY(get, set):Float;
+	public var rotationZ(get, set):Float;
 
-	//@! enforce @:isVar ?
-	public var localMatrix(default, set):Mat4;//requires worldMatrixNeedsUpdate true when modified
-	public var worldMatrix(get, null):Mat4;//computed from hierarchy
+	public var userMatrix:Mat4; //extra transformation, multiplied by localMatrix
+								//if modified, 'worldMatrixNeedsUpdate' should be set to true
+
+	public var worldMatrix(get, never):Mat4; //computed from hierarchy
 
 	public var children:Array<Object3D>;
-	public var parent(get, null):Object3D;
-
-	public var worldMatrixNeedsUpdate:Bool;
+	public var parent(default, null):Object3D;
 
 	//private
+	private var rotation:Euler;
+	private var scale:Vec3;
+
+	private var localMatrix(get, set):Mat4; //if modified, 'worldMatrixNeedsUpdate' should be set to true
+	private var worldMatrixNeedsUpdate(get, set):Bool;
+	private var localMatrixNeedsUpdate:Bool;
+	//internal
+	private var _worldMatrixNeedsUpdate:Bool;
+	private var _worldMatrix:Mat4;
+	private var _localMatrix:Mat4;
 
 	public function new(){
-		localMatrix = (new Mat4()).identity();
+		_localMatrix = (new Mat4()).identity();
+		_worldMatrix = (new Mat4());
+		userMatrix = null;
+
+		rotation = new Euler(0, 0, 0, Order.XYZ);
+		scale = new Vec3(1, 1, 1);
+
+		children = new Array<Object3D>();
+		
 		worldMatrixNeedsUpdate = true;
+		localMatrixNeedsUpdate = true;
 	}
 
-	public inline function add(child:Object3D):Object3D{
+	public function add(child:Object3D):Object3D{
 		children.push(child);
+		child.parent = this;
 		return this;
 	}
 
-	public inline function remove(child:Object3D):Object3D{
+	public function remove(child:Object3D):Object3D{
 		var i = children.indexOf(child);
-		children.splice(i, 1);
+		if(i != -1){
+			children.splice(i, 1);
+			child.parent = null;
+		}
 		return this;
 	}
 
+	public inline function flagWorldMatrixNeedsUpdate(){
+		worldMatrixNeedsUpdate = true;
+	}
+
+
+	//@! todo .clone()
 	public function clone():Object3D{
-		//@! need to check
-		var o = new Object3D();
-		o.parent = parent;
-		o.localMatrix = localMatrix.clone();
-		o.children = o.children.copy();
-		return o;
+		throw 'todo';
+		return null;
 	}
 
-	//convenience
-	public inline function setXYZ(x:Float, ?y:Float, ?z:Float):Object3D{
-		if(y == null) y = x;
-		if(z == null) z = y;
+	//private
+	private function updateWorldMatrix():Object3D{
+		//W = L
+		_worldMatrix.set(localMatrix);
 
-		worldMatrixNeedsUpdate = true;
-		localMatrix.x = x;
-		localMatrix.y = y;
-		localMatrix.z = z;
-		return this;
-	}
+		//W = U * W
+		if(userMatrix != null)
+			_worldMatrix.premultiply(userMatrix);
 
-	public inline function setScaleXYZ(scaleX:Float , ?scaleY:Float, ?scaleZ:Float):Object3D{
-		if(scaleY == null) scaleY = scaleX;
-		if(scaleZ == null) scaleZ = scaleY;
+		//W = P * W
+		if(parent != null)
+			_worldMatrix.premultiply(parent.worldMatrix);
 
-		worldMatrixNeedsUpdate = true;
-		localMatrix.scaleX = scaleX;
-		localMatrix.scaleY = scaleY;
-		localMatrix.scaleZ = scaleZ;
+		worldMatrixNeedsUpdate = false;
+
+		//flag the children for updates
+		for(c in children)
+			c.flagWorldMatrixNeedsUpdate();
+
 		return this;
 	}
 
 	//properties
-	//position alias
-	private inline function get_x():Float return localMatrix.x;
-	private inline function get_y():Float return localMatrix.y;
-	private inline function get_z():Float return localMatrix.z;
+	//position
+	private inline function get_x():Float return _localMatrix.x;
+	private inline function get_y():Float return _localMatrix.y;
+	private inline function get_z():Float return _localMatrix.z;
 	private inline function set_x(v:Float):Float{
 		worldMatrixNeedsUpdate = true;
-		return localMatrix.x = v;
+		return _localMatrix.x = v;
 	}
 	private inline function set_y(v:Float):Float{
 		worldMatrixNeedsUpdate = true;
-		return localMatrix.y = v;
+		return _localMatrix.y = v;
 	}
 	private inline function set_z(v:Float):Float{
 		worldMatrixNeedsUpdate = true;
-		return localMatrix.z = v;
+		return _localMatrix.z = v;
 	}
 
-	//scale alias
-	private inline function get_scaleX():Float return localMatrix.scaleX;
-	private inline function get_scaleY():Float return localMatrix.scaleY;
-	private inline function get_scaleZ():Float return localMatrix.scaleZ;
+	//scale
+	private inline function get_scaleX():Float return scale.x;
+	private inline function get_scaleY():Float return scale.y;
+	private inline function get_scaleZ():Float return scale.z;
 	private inline function set_scaleX(v:Float):Float{
-		worldMatrixNeedsUpdate = true;
-		return localMatrix.scaleX = v;
+		localMatrixNeedsUpdate = true;
+		return scale.x = v;
 	}
 	private inline function set_scaleY(v:Float):Float{
-		worldMatrixNeedsUpdate = true;
-		return localMatrix.scaleY = v;
+		localMatrixNeedsUpdate = true;
+		return scale.y = v;
 	}
 	private inline function set_scaleZ(v:Float):Float{
-		worldMatrixNeedsUpdate = true;
-		return localMatrix.scaleZ = v;
+		localMatrixNeedsUpdate = true;
+		return scale.z = v;
 	}
 
-	//@! rotation alias
-
-	private inline function set_localMatrix(mat4:Mat4):Mat4{
-		worldMatrixNeedsUpdate = true;
-		return localMatrix = mat4;
+	//rotation
+	private inline function get_rotationX():Float return rotation.x;
+	private inline function get_rotationY():Float return rotation.y;
+	private inline function get_rotationZ():Float return rotation.z;
+	private inline function set_rotationX(v:Float):Float{
+		localMatrixNeedsUpdate = true;
+		return rotation.x = v;
+	}
+	private inline function set_rotationY(v:Float):Float{
+		localMatrixNeedsUpdate = true;
+		return rotation.y = v;
+	}
+	private inline function set_rotationZ(v:Float):Float{
+		localMatrixNeedsUpdate = true;
+		return rotation.z = v;
 	}
 
-	private inline function get_worldMatrix():Mat4{
-		throw 'todo';
-		if(worldMatrixNeedsUpdate){
-			//worldMatrix = parent.worldMatrix * localMatrix
+	//local matrix
+	private var _xyz:Vec3 = new Vec3();
+	private inline function get_localMatrix():Mat4{
+		if(localMatrixNeedsUpdate){
+			//compose
+			_xyz.set(x,y,z);
+			_localMatrix.compose(_xyz, rotation, scale);
 		}
-		return worldMatrix;
+		return _localMatrix;	
+	}
+
+	private inline function set_localMatrix(v:Mat4):Mat4{
+		//@! need to decompose rotation
+		throw 'incomplete: need to decompose matrix into properties';
+		worldMatrixNeedsUpdate = true;
+		return _localMatrix = v;
+	}
+
+	//world matrix
+	private function get_worldMatrix():Mat4{
+		if(worldMatrixNeedsUpdate){
+			updateWorldMatrix();
+		}
+		return _worldMatrix;
+	}
+
+	private function get_worldMatrixNeedsUpdate():Bool{
+		//check all parents
+		return _worldMatrixNeedsUpdate || localMatrixNeedsUpdate || (parent != null && parent.worldMatrixNeedsUpdate);
+	}
+
+	private inline function set_worldMatrixNeedsUpdate(v:Bool):Bool{
+		return _worldMatrixNeedsUpdate = v;
 	}
 
 }

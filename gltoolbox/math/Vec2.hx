@@ -1,6 +1,8 @@
 package gltoolbox.math;
 
-abstract Vec2(VectorDataType) from VectorDataType{
+import gltoolbox.typedarray.Float32Array;
+
+abstract Vec2(VectorDataType) from VectorDataType to VectorDataType to Float32Array{
 
 	public var x(get, set):Float;
 	public var y(get, set):Float;
@@ -11,7 +13,7 @@ abstract Vec2(VectorDataType) from VectorDataType{
 		set(x, y);
 	}
 
-	public inline function set(?xy:Vec2, x:Float, y:Float):Vec2{
+	public function set(?xy:Vec2, x:Float = 0, y:Float = 0):Vec2{
 		if(xy != null){
 			each(function(t:Vec2, i:Int) this[i] += xy[i]);
 		}else{
@@ -175,10 +177,10 @@ abstract Vec2(VectorDataType) from VectorDataType{
 	@:arrayAccess inline function arrayWrite(i:Int, v:Float):Float return this[i] = v;
 
 	//properties
-	inline function get_x():Float return this[0];
-	inline function get_y():Float return this[1];
-	inline function set_x(v:Float):Float return this[0] = v;
-	inline function set_y(v:Float):Float return this[1] = v;
+	private inline function get_x():Float return this[0];
+	private inline function get_y():Float return this[1];
+	private inline function set_x(v:Float):Float return this[0] = v;
+	private inline function set_y(v:Float):Float return this[1] = v;
 
 	public inline function toString():String return 'Vec2($x, $y)';
 	

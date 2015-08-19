@@ -1,6 +1,5 @@
 /*
 	@! todo
-	#Custom Attributes
 
 	#Dynamic Geometry
 	- dynamic geometry with an update() function
@@ -13,7 +12,7 @@ package gltoolbox.geometry;
 import gltoolbox.core.Attribute;
 import gltoolbox.gl.GL;
 import gltoolbox.gl.GLBuffer;
-import gltoolbox.GLTools;
+import gltoolbox.GPU;
 import gltoolbox.typedarray.Float32Array;
 
 class Geometry{
@@ -29,7 +28,8 @@ class Geometry{
 	public function new(){
 		vertexAttribute = {
 			data: null,
-			itemSize: 0,
+			itemSize: 1, //set by subclasses
+			usage: GL.STATIC_DRAW,
 			buffer: null
 		}
 
@@ -38,13 +38,9 @@ class Geometry{
 		];
 	}
 
-	public inline function upload():Geometry{
-		vertexAttribute.buffer = GLTools.uploadArray(vertexAttribute.data, GL.STATIC_DRAW);
-		return this;
-	}
-
 	//private
 	private function updateVertexCount():Geometry{
+		this.vertexCount = Std.int(this.vertices.length / vertexAttribute.itemSize);
 		return this;
 	}
 

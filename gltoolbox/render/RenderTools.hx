@@ -17,7 +17,7 @@ class RenderTools{
 	static function get_textureQuad():GLBuffer{
 		if(textureQuad == null){
 			textureQuad = new Rectangle.Unit();
-			textureQuad.upload();
+			textureQuad.upload();//@! replaced, upload no longer used
 		}
 		return textureQuad;
 	}

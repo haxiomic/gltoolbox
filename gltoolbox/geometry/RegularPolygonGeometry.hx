@@ -7,7 +7,7 @@ class RegularPolygonGeometry extends Geometry2D{
 
 	public var nSides(default, null):Int;
 
-	public function new(nSides:Int, radius:Float = 1, angle:Float = 0, offsetX:Float = 0, offsetY:Float = 0){
+	public function new(nSides:Int, radius:Float = 1, angle:Float = 0, centerX:Float = 0, centerY:Float = 0){
 		super();
 		
 		//triangle count = nSides - 2
@@ -25,8 +25,8 @@ class RegularPolygonGeometry extends Geometry2D{
 		//requires convex vertices in clockwise order
 		var da = Math.PI * 2.0 / nSides;
 
-		inline function vX(i:Int) return (Math.cos((i * da) + angle) * radius) + offsetX;
-		inline function vY(i:Int) return (Math.sin((i * da) + angle) * radius) + offsetY;
+		inline function vX(i:Int) return (Math.cos((i * da) + angle) * radius) + centerX;
+		inline function vY(i:Int) return (Math.sin((i * da) + angle) * radius) + centerY;
 
 		var vOffset:Int = 0;
 		var a:Int = 0;          //forward counter

@@ -1,6 +1,8 @@
 package gltoolbox.math;
 
-abstract Vec3(VectorDataType) from VectorDataType{
+import gltoolbox.typedarray.Float32Array;
+
+abstract Vec3(VectorDataType) from VectorDataType to VectorDataType to Float32Array{
 
 	public var x(get, set):Float;
 	public var y(get, set):Float;
@@ -13,9 +15,9 @@ abstract Vec3(VectorDataType) from VectorDataType{
 		set(x, y, z);
 	}
 
-	public inline function set(?xyz:Vec3, x:Float, y:Float, z:Float):Vec3{
+	public function set(?xyz:Vec3, x:Float = 0, y:Float = 0, z:Float = 0):Vec3{
 		if(xyz != null){
-			each(function(t:Vec2, i:Int) this[i] += xyz[i]);
+			each(function(t:Vec3, i:Int) this[i] += xyz[i]);
 		}else{
 			set_x(x);
 			set_y(y);
@@ -203,12 +205,12 @@ abstract Vec3(VectorDataType) from VectorDataType{
 	@:arrayAccess inline function arrayWrite(i:Int, v:Float):Float return this[i] = v;
 
 	//properties
-	inline function get_x():Float return this[0];
-	inline function get_y():Float return this[1];
-	inline function get_z():Float return this[2];
-	inline function set_x(v:Float):Float return this[0] = v;
-	inline function set_y(v:Float):Float return this[1] = v;
-	inline function set_z(v:Float):Float return this[2] = v;
+	private inline function get_x():Float return this[0];
+	private inline function get_y():Float return this[1];
+	private inline function get_z():Float return this[2];
+	private inline function set_x(v:Float):Float return this[0] = v;
+	private inline function set_y(v:Float):Float return this[1] = v;
+	private inline function set_z(v:Float):Float return this[2] = v;
 
 	public inline function toString():String return 'Vec3($x, $y, $z)';
 	

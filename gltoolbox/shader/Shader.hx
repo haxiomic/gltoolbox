@@ -6,4 +6,6 @@ class Shader{
 		throw 'todo';
 	}
 	
+	//@! todo .clone()
+		
 }

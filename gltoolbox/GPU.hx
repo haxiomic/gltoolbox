@@ -1,5 +1,5 @@
 /*
-	GLTools
+	GPU
 
 	Utility functions for common GL operations
 
@@ -19,7 +19,7 @@ import gltoolbox.typedarray.Float32Array;
 import gltoolbox.typedarray.ArrayBufferView;
 
 
-class GLTools{
+class GPU{
 
 	//Shader Tools
 	static public function uploadShaders(geometryShaderSrc:String, pixelShaderSrc:String):GLProgram{
@@ -70,7 +70,7 @@ class GLTools{
 	}
 
 	//Texture Tools
-	static public function createGLTexture(
+	static public function allocateTexture(
 		width:Int,
 		height:Int,
 		channelType:Int = GL.RGBA,

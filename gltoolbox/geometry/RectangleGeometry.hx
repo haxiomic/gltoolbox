@@ -27,18 +27,18 @@ class RectangleGeometry extends Geometry2D{
 
 
 //special cases
-abstract Unit(Rectangle) to Rectangle from Rectangle{
+abstract Unit(RectangleGeometry) to RectangleGeometry from RectangleGeometry{
 
 	public function new(){
-		this = new Rectangle(0, 0, 1, 1);
+		this = new RectangleGeometry(0, 0, 1, 1);
 	}
 
 }
 
-abstract ClipSpace(Rectangle) to Rectangle from Rectangle{
+abstract ClipSpace(RectangleGeometry) to RectangleGeometry from RectangleGeometry{
 
 	public function new(){
-		this = new Rectangle(-1, -1, 2, 2);
+		this = new RectangleGeometry(-1, -1, 2, 2);
 	}
 	
 }

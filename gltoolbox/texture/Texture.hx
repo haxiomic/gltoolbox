@@ -5,5 +5,7 @@ class Texture{
 	public function new(){
 		throw 'todo';
 	}
+
+	//@! todo .clone()
 	
 }

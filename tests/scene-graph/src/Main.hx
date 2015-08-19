@@ -3,17 +3,20 @@ import snow.types.Types.AppConfig;
 import snow.types.Types.ModState;
 import snow.types.Types.Key;
 
-
 import gltoolbox.core.Attribute;
 import gltoolbox.gl.GL;
 import gltoolbox.gl.GLBuffer;
 import gltoolbox.gl.GLProgram;
 import gltoolbox.gl.GLUniformLocation;
-import gltoolbox.GLTools;
+import gltoolbox.GPU;
 import gltoolbox.math.Color;
+import gltoolbox.object.Object3D;
+import gltoolbox.object.Mesh;
+import gltoolbox.math.*;
 import gltoolbox.geometry.Geometry;
 import gltoolbox.geometry.Geometry2D;
-import gltoolbox.geometry.RegularPolygon;
+import gltoolbox.geometry.RegularPolygonGeometry;
+import gltoolbox.geometry.RectangleGeometry;
 
 typedef TmpProgramObject = {
 	var program:GLProgram;
@@ -34,17 +37,22 @@ class Main extends snow.App {
 		app.window.onrender = render;
 	}
 
-	override function update(dt:Float){}
 
 	//app code
+	var timeStart:Float = 0;
 	var clearColor:Color;
 	var triangleBuffer:GLBuffer;
 	var programObject:TmpProgramObject;
 
-	var geomA:Geometry2D;
-	var geomB:Geometry2D;
+	var scene:Object3D;
+
+	var mesh1:Mesh;
+	var mesh2:Mesh;
+	var mesh3:Mesh;
 
 	function init(){
+		timeStart = haxe.Timer.stamp();
+
 		clearColor = new Color(0, 0, 0);
 
 		//gl settings
@@ -52,11 +60,25 @@ class Main extends snow.App {
 		GL.disable(GL.CULL_FACE);
 
 		//create and upload geometry
-		geomA = new RegularPolygon(4, 0.5, Math.PI * 0.25, -0.5);
-		geomA.upload();
+		mesh1 = new Mesh(new RectangleGeometry(-0.25, -0.25, 0.5, 0.5), null);
+		mesh1.rotationZ = 0.2;
 
-		geomB = new RegularPolygon(10, 0.5);
-		geomB.upload();
+		mesh2 = new Mesh(new RegularPolygonGeometry(6, 0.25), null);
+		mesh2.x = 0.3;
+		mesh2.scaleX = 1.0;
+		mesh2.scaleY = 1.0;
+
+		mesh3 = new Mesh(new RegularPolygonGeometry(20, 0.1), null);
+		mesh3.x = 0.2;
+
+		mesh1.add(mesh2);
+		mesh2.add(mesh3);
+
+		//test mesh3 world decompose
+		var p = new Vec3();
+		var r = new Mat4();
+		var s = new Vec3();
+		mesh2.worldMatrix.decompose(p, r, s);
 
 		//create gpu program
 		var geometryShaderSrc = 
@@ -65,12 +87,17 @@ class Main extends snow.App {
 		#end
 		'
 			attribute vec2 position;
+
+			uniform mat4 modelMatrix;
+
 			varying vec2 p;
+
 			void main(){
 				p = position*.5 + .5;
-				gl_Position = vec4(position, 0.0, 1.0);
+				gl_Position = modelMatrix * vec4(position, 0.0, 1.0);
 			}
 		';
+
 		var pixelShaderSrc = 
 		#if !desktop
 		'precision mediump float;' +
@@ -83,7 +110,7 @@ class Main extends snow.App {
 		';
 
 		programObject = {
-			program: GLTools.uploadShaders(geometryShaderSrc, pixelShaderSrc),
+			program: GPU.uploadShaders(geometryShaderSrc, pixelShaderSrc),
 			attributeLocations: new Map<String, Int>(),
 			uniformLocations: new Map<String, GLUniformLocation>()
 		}
@@ -91,7 +118,15 @@ class Main extends snow.App {
 		//enforce 0 attrib location for position
 		GL.bindAttribLocation(programObject.program, 0, 'position');
 
-		programObject.attributeLocations['position'] = GL.getAttribLocation(programObject.program, 'position');
+		inline function registerAttribute(name:String){
+			programObject.attributeLocations[name] = GL.getAttribLocation(programObject.program, name);
+		}
+		inline function registerUniform(name:String){
+			programObject.uniformLocations[name] = GL.getUniformLocation(programObject.program, name);
+		}
+
+		registerAttribute('position');
+		registerUniform('modelMatrix');
 
 		//enable attributes
 		for(loc in programObject.attributeLocations){
@@ -99,39 +134,71 @@ class Main extends snow.App {
 		}
 	}
 
-	function render(window:Window){
+	override inline function update(dt:Float){
+		var time = (haxe.Timer.stamp() - timeStart);
+		time = time * 0.5;
+
+		mesh1.rotationX += 0.4*dt;
+		mesh1.rotationY += 0.4*dt;
+		mesh1.rotationZ += 0.4*dt;
+		mesh1.scaleX = Math.sin(time)*0.5+0.25;
+		mesh1.scaleY = Math.sin(time)*0.5+0.25;
+
+		mesh2.y = Math.sin(time*3)*0.3;
+		mesh3.x = Math.sin(time*3)*0.1 + 0.2;
+
+	}
+
+	inline function render(window:Window){
+
 		GL.viewport(0, 0, window.width, window.height);
 
 		GL.clear(GL.COLOR_BUFFER_BIT);
 
 		var currentProgram:GLProgram;
 
-		inline function draw(geom:Geometry, programObject:TmpProgramObject){
+		function drawMesh(mesh:Mesh){
+			//bind mesh program
+			//@! tmp program type
 			if(programObject.program != currentProgram){
 				GL.useProgram(programObject.program);
 				currentProgram = programObject.program;
 			}
 
-			//link attributes to arrays
-			for(name in programObject.attributeLocations.keys()){
-				var attr = geom.attributes[name];
-				if(attr == null) continue;
+			//pass transformation matrix as uniform
+			GL.uniformMatrix4fv(programObject.uniformLocations['modelMatrix'], false, mesh.worldMatrix);
 
-				switch attr{
+			var geom = mesh.geometry;
+
+			//select GPU buffers for attributes
+			for(name in programObject.attributeLocations.keys()){
+				//get the geometry attribute that matches the program attribute
+				var geoAttr = geom.attributes[name];
+				if(geoAttr == null) continue;
+
+				switch geoAttr{
 					//buffer attribute
 					case BufferAttribute(data):
+						//upload to GPU if not already
+						if(data.buffer == null){
+							data.gpuUpload();
+						}
+
 						GL.bindBuffer(GL.ARRAY_BUFFER, data.buffer);
 						GL.vertexAttribPointer(programObject.attributeLocations[name], data.itemSize, GL.FLOAT, false, 0, 0);
 					default:
+						throw 'Not implemented';
 				}
-
 			}
 
 			GL.drawArrays(geom.drawMode, 0, geom.vertexCount);
+
+			for(c in mesh.children){
+				drawMesh(cast c);//@! shouldn't be cast; need type switch
+			}
 		}
 
-		draw(geomA, programObject);
-		draw(geomB, programObject);
+		drawMesh(mesh1);
 	}
 
 }

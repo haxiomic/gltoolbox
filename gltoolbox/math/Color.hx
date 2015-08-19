@@ -1,7 +1,7 @@
 package gltoolbox.math;
 
 @:forward
-abstract Color(Vec3) from Vec3{
+abstract Color(Vec3) from Vec3 to Vec3{
 
 	public var r(get, set):Float;
 	public var g(get, set):Float;
@@ -33,6 +33,8 @@ abstract Color(Vec3) from Vec3{
 	public inline function getHexString():String{
 		return StringTools.hex(getHex(), 6);
 	}
+
+	//@! todo .clone()
 
 	//properties
 	inline function get_r():Float return this.x;
