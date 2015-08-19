@@ -2,7 +2,7 @@ package gltoolbox.math;
 
 import gltoolbox.typedarray.Float32Array;
 
-abstract Vec4(VectorDataType) from VectorDataType to VectorDataType to Float32Array{
+abstract Vec4(VectorDataType) from VectorDataType{
 	
 	public var x(get, set):Float;
 	public var y(get, set):Float;
@@ -17,15 +17,16 @@ abstract Vec4(VectorDataType) from VectorDataType to VectorDataType to Float32Ar
 		set(x, y, z, w);
 	}
 
-	public function set(?xyzw:Vec4, x:Float = 0, y:Float = 0, z:Float = 0, w:Float = 0):Vec4{
-		if(xyzw != null){
-			each(function(t:Vec4, i:Int) this[i] += xyzw[i]);
-		}else{
-			set_x(x);
-			set_y(y);
-			set_z(z);
-			set_w(w);
-		}
+	public function set(x:Float, y:Float, z:Float, w:Float):Vec4{
+		set_x(x);
+		set_y(y);
+		set_z(z);
+		set_w(w);
+		return this;
+	}
+
+	public function setFromVec4(v:Vec4):Vec4{
+		set(v.x, v.y, v.z, v.w);
 		return this;
 	}
 
@@ -191,6 +192,8 @@ abstract Vec4(VectorDataType) from VectorDataType to VectorDataType to Float32Ar
 	//array access
 	@:arrayAccess inline function arrayRead(i:Int):Float return this[i];
 	@:arrayAccess inline function arrayWrite(i:Int, v:Float):Float return this[i] = v;
+
+	@:to inline function toFloat32Array():Float32Array return this;
 
 	//properties
 	private inline function get_x():Float return this[0];

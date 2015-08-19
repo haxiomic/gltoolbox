@@ -65,20 +65,31 @@ class Main extends snow.App {
 
 		mesh2 = new Mesh(new RegularPolygonGeometry(6, 0.25), null);
 		mesh2.x = 0.3;
-		mesh2.scaleX = 1.0;
-		mesh2.scaleY = 1.0;
 
-		mesh3 = new Mesh(new RegularPolygonGeometry(20, 0.1), null);
+		mesh3 = new Mesh(new RegularPolygonGeometry(40, 0.1), null);
 		mesh3.x = 0.2;
 
 		mesh1.add(mesh2);
 		mesh2.add(mesh3);
+
+		var mesh4 = new Mesh(new RegularPolygonGeometry(6, 0.25), null);
+		mesh4.x = -0.3;
+
+		var mesh5 = new Mesh(new RegularPolygonGeometry(40, 0.1), null);
+		mesh5.x = -0.2;
+
+		mesh1.add(mesh4);
+		mesh4.add(mesh5);
+
 
 		//test mesh3 world decompose
 		var p = new Vec3();
 		var r = new Mat4();
 		var s = new Vec3();
 		mesh2.worldMatrix.decompose(p, r, s);
+		trace(p);
+		trace(r);
+		trace(s);
 
 		//create gpu program
 		var geometryShaderSrc = 
@@ -141,8 +152,8 @@ class Main extends snow.App {
 		mesh1.rotationX += 0.4*dt;
 		mesh1.rotationY += 0.4*dt;
 		mesh1.rotationZ += 0.4*dt;
-		mesh1.scaleX = Math.sin(time)*0.5+0.25;
-		mesh1.scaleY = Math.sin(time)*0.5+0.25;
+		mesh1.scaleX = Math.sin(time)*0.8+1.0;
+		mesh1.scaleY = Math.sin(time)*0.8+1.0;
 
 		mesh2.y = Math.sin(time*3)*0.3;
 		mesh3.x = Math.sin(time*3)*0.1 + 0.2;

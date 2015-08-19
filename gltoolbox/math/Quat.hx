@@ -2,7 +2,7 @@ package gltoolbox.math;
 
 import gltoolbox.typedarray.Float32Array;
 
-abstract Quat(VectorDataType) from VectorDataType to VectorDataType to Float32Array{
+abstract Quat(VectorDataType) from VectorDataType{
 
 	public var x(get, set):Float;
 	public var y(get, set):Float;
@@ -16,15 +16,11 @@ abstract Quat(VectorDataType) from VectorDataType to VectorDataType to Float32Ar
 		set(x, y, z, w);
 	}
 
-	public inline function set(?xyzw:Quat, x:Float = 0, y:Float = 0, z:Float = 0, w:Float = 0):Quat{
-		if(xyzw != null){
-			each(function(t:Quat, i:Int) this[i] += xyzw[i]);
-		}else{
-			set_x(x);
-			set_y(y);
-			set_z(z);
-			set_w(w);
-		}
+	public inline function set(x:Float, y:Float, z:Float, w:Float):Quat{
+		set_x(x);
+		set_y(y);
+		set_z(z);
+		set_w(w);
 		return this;
 	}
 
@@ -45,6 +41,29 @@ abstract Quat(VectorDataType) from VectorDataType to VectorDataType to Float32Ar
 
 	public inline function setW(s:Float):Quat{
 		w = s;
+		return this;
+	}
+
+	public function setFromQuat(q:Quat):Quat{
+		set(q.x, q.y, q.z, q.w);
+		return this;
+	}
+
+	public function setFromEuler(e:Euler):Quat{
+		var c1 = Math.cos(e.swappedX/2); var s1 = Math.sin(e.swappedX/2);
+		var c2 = Math.cos(e.swappedY/2); var s2 = Math.sin(e.swappedY/2);
+		var c3 = Math.cos(e.swappedZ/2); var s3 = Math.sin(e.swappedZ/2);
+		set(
+			s1 * c2 * c3 + c1 * s2 * s3,
+			c1 * s2 * c3 - s1 * c2 * s3,
+			c1 * c2 * s3 + s1 * s2 * c3,
+			c1 * c2 * c3 - s1 * s2 * s3
+		);
+		return this;
+	}
+
+	public function setFromMat4(m:Mat4):Quat{
+		throw 'not yet implemented';//@!
 		return this;
 	}
 
@@ -115,7 +134,7 @@ abstract Quat(VectorDataType) from VectorDataType to VectorDataType to Float32Ar
 		throw 'slerp needs testing';
 
 		if(t == 0) return this;
-		if(t == 1) return set(qFinal);
+		if(t == 1) return setFromQuat(qFinal);
 
 		var _x = x, _y = y, _z = z, _w = w;
 
@@ -132,7 +151,7 @@ abstract Quat(VectorDataType) from VectorDataType to VectorDataType to Float32Ar
 		}else if (cosHalfTheta >= 1.0) {
 			return this;
 		}else{
-			set(qFinal);
+			setFromQuat(qFinal);
 		}
 
 		var halfTheta = Math.acos(cosHalfTheta);
@@ -169,6 +188,7 @@ abstract Quat(VectorDataType) from VectorDataType to VectorDataType to Float32Ar
 	@:arrayAccess inline function arrayRead(i:Int):Float return this[i];
 	@:arrayAccess inline function arrayWrite(i:Int, v:Float):Float return this[i] = v;
 
+
 	//properties
 	private inline function get_x():Float return this[0];
 	private inline function get_y():Float return this[1];
@@ -179,6 +199,8 @@ abstract Quat(VectorDataType) from VectorDataType to VectorDataType to Float32Ar
 	private inline function set_z(v:Float):Float return this[2] = v;
 	private inline function set_w(v:Float):Float return this[3] = v;
 
+	@:to inline function toFloat32Array():Float32Array return this;
+	
 	public inline function toString():String return 'Quat($x, $y, $z, $w)';
 	
 }

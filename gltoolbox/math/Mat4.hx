@@ -9,7 +9,7 @@ package gltoolbox.math;
 import gltoolbox.math.Orientation;
 import gltoolbox.typedarray.Float32Array;
 
-abstract Mat4(VectorDataType) from VectorDataType to VectorDataType to Float32Array{
+abstract Mat4(VectorDataType) from VectorDataType{
 
 	public var x(get, set):Float;
 	public var y(get, set):Float;
@@ -31,20 +31,47 @@ abstract Mat4(VectorDataType) from VectorDataType to VectorDataType to Float32Ar
 	}
 
 	public function set(
-		?mat4:Mat4,
-		n11:Float = 0, n12:Float = 0, n13:Float = 0, n14:Float = 0,
-		n21:Float = 0, n22:Float = 0, n23:Float = 0, n24:Float = 0,
-		n31:Float = 0, n32:Float = 0, n33:Float = 0, n34:Float = 0,
-		n41:Float = 0, n42:Float = 0, n43:Float = 0, n44:Float = 0
+		n11:Float, n12:Float, n13:Float, n14:Float,
+		n21:Float, n22:Float, n23:Float, n24:Float,
+		n31:Float, n32:Float, n33:Float, n34:Float,
+		n41:Float, n42:Float, n43:Float, n44:Float
 	):Mat4{
-		if(mat4 != null){
-			each(function(t:Mat4, idx:Int, _, _) this[idx] = mat4[idx] );
-		}else{
-			this[0] = n11; this[4] = n12; this[8] = n13; this[12] = n14;
-			this[1] = n21; this[5] = n22; this[9] = n23; this[13] = n24;
-			this[2] = n31; this[6] = n32; this[10] = n33; this[14] = n34;
-			this[3] = n41; this[7] = n42; this[11] = n43; this[15] = n44;
-		}
+		this[0] = n11; this[4] = n12; this[8] = n13; this[12] = n14;
+		this[1] = n21; this[5] = n22; this[9] = n23; this[13] = n24;
+		this[2] = n31; this[6] = n32; this[10] = n33; this[14] = n34;
+		this[3] = n41; this[7] = n42; this[11] = n43; this[15] = n44;
+		return this;
+	}
+
+	public function setFromQuat(q:Quat):Mat4{
+		var x2 = q.x + q.x, y2 = q.y + q.y, z2 = q.z + q.z;
+		var xx = q.x * x2, xy = q.x * y2, xz = q.x * z2;
+		var yy = q.y * y2, yz = q.y * z2, zz = q.z * z2;
+		var wx = q.w * x2, wy = q.w * y2, wz = q.w * z2;
+		set(
+			1 - (yy + zz), xy - wz,       xz + wy,       0,
+			xy + wz,       1 - (xx + zz), yz - wx,       0,
+			xz - wy,       yz + wx,       1 - (xx + yy), 0,
+			0,             0,             0,             1
+		);
+		return this;
+	}
+
+	public function setFromEuler(e:Euler):Mat4{
+		var cx = Math.cos(e.swappedX); var sx = Math.sin(e.swappedX);
+		var cy = Math.cos(e.swappedY); var sy = Math.sin(e.swappedY);
+		var cz = Math.cos(e.swappedZ); var sz = Math.sin(e.swappedZ);
+		set(
+			 cy*cz,  cx*sz + sx*sy*cz, sx*sz - cx*sy*cz, 0,
+			-cy*sz,  cx*cz - sx*sy*sz, sx*cz + cx*sy*sz, 0,
+			 sy,    -sx*cy,            cx*cy,            0,
+			 0,      0,                0,                1
+		);
+		return this;
+	}
+
+	public function setFromMat4(m:Mat4):Mat4{
+		each(function(t:Mat4, idx:Int, _, _) this[idx] = m[idx] );
 		return this;
 	}
 
@@ -164,34 +191,14 @@ abstract Mat4(VectorDataType) from VectorDataType to VectorDataType to Float32Ar
 	}
 
 	public function compose(position:Vec3, rotation:Orientation, scale:Vec3):Mat4{
-		//bottom row
-		this[3] = 0; this[7] = 0; this[11] = 0; this[15] = 1;
-		
 		//rotation
 		switch rotation{
-			case Quat(quat):
-				var qx = quat.x, qy = quat.y, qz = quat.z, qw = quat.w;
-				var x2 = qx + qx, y2 = qy + qy, z2 = qz + qz;
-				var xx = qx * x2, xy = qx * y2, xz = qx * z2;
-				var yy = qy * y2, yz = qy * z2, zz = qz * z2;
-				var wx = qw * x2, wy = qw * y2, wz = qw * z2;
-
-				this[0] = 1 - (yy + zz); this[4] = xy - wz;       this[8] = xz + wy;
-				this[1] = xy + wz;       this[5] = 1 - (xx + zz); this[9] = yz - wx;
-				this[2] = xz - wy;       this[6] = yz + wx;       this[10] = 1 - (xx + yy);
-			case Euler(euler):
-				var cx = Math.cos(euler.swappedX); var sx = Math.sin(euler.swappedX);
-				var cy = Math.cos(euler.swappedY); var sy = Math.sin(euler.swappedY);
-				var cz = Math.cos(euler.swappedZ); var sz = Math.sin(euler.swappedZ);
-
-				//top left 3x3
-				this[0] =  cy*cz; this[4] =  cx*sz + sx*sy*cz; this[8]  = sx*sz - cx*sy*cz;
-				this[1] = -cy*sz; this[5] =  cx*cz - sx*sy*sz; this[9]  = sx*cz + cx*sy*sz;
-				this[2] =  sy;    this[6] = -sx*cy;            this[10] = cx*cy;
+			case Quat(q):
+				setFromQuat(q);
+			case Euler(e):
+				setFromEuler(e);
 			case Mat4(m):
-				this[0] = m[0]; this[4] = m[4]; this[8] = m[8];
-				this[1] = m[1]; this[5] = m[5]; this[9] = m[9];
-				this[2] = m[2]; this[6] = m[6]; this[10] = m[10];
+				setFromMat4(m);
 		}
 
 		//scale
@@ -220,7 +227,7 @@ abstract Mat4(VectorDataType) from VectorDataType to VectorDataType to Float32Ar
 		position.set(x,y,z);
 
 		//rotation
-		mat4.set(this);
+		mat4.setFromMat4(this);
 
 		var invSX = 1/sx;
 		var invSY = 1/sy;
@@ -230,18 +237,7 @@ abstract Mat4(VectorDataType) from VectorDataType to VectorDataType to Float32Ar
 		mat4[1] *= invSX; mat4[5] *= invSY; mat4[9] *= invSZ;
 		mat4[2] *= invSX; mat4[6] *= invSY; mat4[10] *= invSZ;
 
-		switch rotation{
-			case Quat(q):
-				var o:Orientation = mat4;
-				var oQ:Quat = o;
-				q.set(oQ);
-			case Euler(e):
-				var o:Orientation = mat4;
-				var oE:Euler = o;
-				e.set(oE);
-			case Mat4(m):
-				m.set(mat4);
-		}
+		rotation.setFromMat4(mat4);
 
 		//scale
 		scale.set(sx, sy, sz);
@@ -260,12 +256,14 @@ abstract Mat4(VectorDataType) from VectorDataType to VectorDataType to Float32Ar
 	/* ------------------------------- */
 
 	public function clone():Mat4{
-		return (new Mat4()).set(this);
+		return (new Mat4()).setFromMat4(this);
 	}
 
 	//array access
 	@:arrayAccess inline function arrayRead(i:Int):Float return this[i];
 	@:arrayAccess inline function arrayWrite(i:Int, v:Float):Float return this[i] = v;
+
+	@:to inline function toFloat32Array():Float32Array return this;
 
 	public function toString():String{
 		inline function transposedIdx(i:Int){

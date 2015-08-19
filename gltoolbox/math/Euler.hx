@@ -13,9 +13,7 @@ abstract Euler(EulerClass) from EulerClass{
 	@:arrayAccess inline function arrayRead(i:Int):Float return this.v[i];
 	@:arrayAccess inline function arrayWrite(i:Int, v:Float):Float return this.v[i] = v;
 
-	@:to inline function toFloat32Array():Float32Array{
-		return this.v;
-	}
+	@:to inline function toFloat32Array():Float32Array return this.v;
 
 	@:from static inline function fromArrayFloat(a:Array<Float>):Euler{
 		return new Euler(a[0], a[1], a[2]);
@@ -54,26 +52,38 @@ private class EulerClass{
 		//@!
 		if(order != XYZ){
 			throw 'orders other than XYZ have yet to be tested';
+			//@! search through code for uses of Euler
 		}
 
 		this.order = order;
 	}
 
-	public inline function set(?xyz:Vec3, ?e:Euler, rotationX:Float = 0, rotationY:Float = 0, rotationZ:Float = 0):EulerClass{
-		if(xyz != null){
-			this.x = xyz.x;
-			this.y = xyz.y;
-			this.z = xyz.z;
-		}else if(e != null){
-			this.x = e.x;
-			this.y = e.y;
-			this.z = e.z;
-			this.order = e.order;
-		}else{
-			this.x = rotationX;
-			this.y = rotationY;
-			this.z = rotationZ;
+	public inline function set(rotationX:Float, rotationY:Float, rotationZ:Float, order:Order):EulerClass{
+		this.x = rotationX;
+		this.y = rotationY;
+		this.z = rotationZ;
+		this.order = order;
+
+		if(order != XYZ){
+			throw 'orders other than XYZ have yet to be tested';
+			//@! search through code for uses of Euler
 		}
+
+		return this;
+	}
+
+	public function setFromQuat(q:Quat):EulerClass{
+		trace('not yet implemented');
+		return this;
+	}
+
+	public function setFromEuler(e:Euler):EulerClass{
+		set(e.x, e.y, e.z, e.order);
+		return this;
+	}
+
+	public function setFromMat4(m:Mat4):EulerClass{
+		trace('not yet implemented');
 		return this;
 	}
 

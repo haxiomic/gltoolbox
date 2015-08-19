@@ -8,7 +8,7 @@ package gltoolbox.math;
 
 import gltoolbox.typedarray.Float32Array;
 
-abstract Mat3(VectorDataType) from VectorDataType to VectorDataType to Float32Array{
+abstract Mat3(VectorDataType) from VectorDataType{
 
 	public inline function new(
 		n11:Float = 1, n12:Float = 0, n13:Float = 0,
@@ -24,18 +24,18 @@ abstract Mat3(VectorDataType) from VectorDataType to VectorDataType to Float32Ar
 	}
 
 	public function set(
-		?mat3:Mat3,
-		n11:Float = 0, n12:Float = 0, n13:Float = 0,
-		n21:Float = 0, n22:Float = 0, n23:Float = 0,
-		n31:Float = 0, n32:Float = 0, n33:Float = 0
+		n11:Float, n12:Float, n13:Float,
+		n21:Float, n22:Float, n23:Float,
+		n31:Float, n32:Float, n33:Float
 	):Mat3{
-		if(mat3 != null){
-			each(function(t:Mat3, idx:Int, _, _) this[idx] = mat3[idx] );		
-		}else{		
-			this[0] = n11; this[3] = n12; this[6] = n13;
-			this[1] = n21; this[4] = n22; this[7] = n23;
-			this[2] = n31; this[5] = n32; this[8] = n33;
-		}
+		this[0] = n11; this[3] = n12; this[6] = n13;
+		this[1] = n21; this[4] = n22; this[7] = n23;
+		this[2] = n31; this[5] = n32; this[8] = n33;
+		return this;
+	}
+
+	public function setFromMat3(m:Mat3):Mat3{
+		each(function(t:Mat3, idx:Int, _, _) this[idx] = m[idx] );	
 		return this;
 	}
 
@@ -98,6 +98,8 @@ abstract Mat3(VectorDataType) from VectorDataType to VectorDataType to Float32Ar
 	//array access
 	@:arrayAccess inline function arrayRead(i:Int):Float return this[i];
 	@:arrayAccess inline function arrayWrite(i:Int, v:Float):Float return this[i] = v;
+
+	@:to inline function toFloat32Array():Float32Array return this;
 
 	public function toString():String{
 		inline function transposedIdx(i:Int){

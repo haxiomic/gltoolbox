@@ -82,7 +82,7 @@ class Object3D{
 	//private
 	private function updateWorldMatrix():Object3D{
 		//W = L
-		_worldMatrix.set(localMatrix);
+		_worldMatrix.setFromMat4(localMatrix);
 
 		//W = U * W
 		if(userMatrix != null)

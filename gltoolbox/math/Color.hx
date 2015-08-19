@@ -11,10 +11,15 @@ abstract Color(Vec3) from Vec3 to Vec3{
 		this = new Vec3(r, g, b);
 	}
 
-	public inline function set(r:Float, g:Float, b:Float):Color{
+	public function set(r:Float, g:Float, b:Float):Color{
 		set_r(r);
 		set_g(g);
 		set_b(b);
+		return this;
+	}
+
+	public function setFromColor(c:Color):Color{
+		set(c.r, c.g, c.b);
 		return this;
 	}
 

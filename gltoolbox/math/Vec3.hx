@@ -2,7 +2,7 @@ package gltoolbox.math;
 
 import gltoolbox.typedarray.Float32Array;
 
-abstract Vec3(VectorDataType) from VectorDataType to VectorDataType to Float32Array{
+abstract Vec3(VectorDataType) from VectorDataType{
 
 	public var x(get, set):Float;
 	public var y(get, set):Float;
@@ -15,14 +15,15 @@ abstract Vec3(VectorDataType) from VectorDataType to VectorDataType to Float32Ar
 		set(x, y, z);
 	}
 
-	public function set(?xyz:Vec3, x:Float = 0, y:Float = 0, z:Float = 0):Vec3{
-		if(xyz != null){
-			each(function(t:Vec3, i:Int) this[i] += xyz[i]);
-		}else{
-			set_x(x);
-			set_y(y);
-			set_z(z);
-		}
+	public function set(x:Float, y:Float, z:Float):Vec3{
+		set_x(x);
+		set_y(y);
+		set_z(z);
+		return this;
+	}
+
+	public function setFromVec3(v:Vec3):Vec3{
+		set(v.x, v.y, v.z);
 		return this;
 	}
 
@@ -203,6 +204,8 @@ abstract Vec3(VectorDataType) from VectorDataType to VectorDataType to Float32Ar
 	//array access
 	@:arrayAccess inline function arrayRead(i:Int):Float return this[i];
 	@:arrayAccess inline function arrayWrite(i:Int, v:Float):Float return this[i] = v;
+
+	@:to inline function toFloat32Array():Float32Array return this;
 
 	//properties
 	private inline function get_x():Float return this[0];
