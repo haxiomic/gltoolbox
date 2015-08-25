@@ -7,5 +7,6 @@ class Texture{
 	}
 
 	//@! todo .clone()
+	//@! todo .dispose()
 	
 }

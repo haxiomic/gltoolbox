@@ -8,7 +8,6 @@ class RegularPolygonGeometry extends Geometry2D{
 	public var nSides(default, null):Int;
 
 	public function new(nSides:Int, radius:Float = 1, angle:Float = 0, centerX:Float = 0, centerY:Float = 0){
-		super();
 		
 		//triangle count = nSides - 2
 		//vertex count = 3 * (nSides - 2)
@@ -19,7 +18,7 @@ class RegularPolygonGeometry extends Geometry2D{
 		this.nSides = nSides;
 
 		//setup vertex memory
-		this.vertices = new Float32Array(2 * 3 * (nSides - 2));
+		var vertices = new Float32Array(2 * 3 * (nSides - 2));
 
 		//zig-zag triangular decomposition
 		//requires convex vertices in clockwise order
@@ -47,7 +46,7 @@ class RegularPolygonGeometry extends Geometry2D{
 			this.vertices[vOffset++] = vY(_c);
 		}
 
-		this.drawMode = GL.TRIANGLES;
+		super(vertices, GL.TRIANGLES);
 		updateVertexCount();
 	}
 

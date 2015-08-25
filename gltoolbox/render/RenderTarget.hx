@@ -1,5 +1,6 @@
 /*
 	@! out of sync
+	@! - If doing RTT on a scene, this requires a new depth buffer
 */
 
 package gltoolbox.render;

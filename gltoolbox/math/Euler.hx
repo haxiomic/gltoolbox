@@ -3,10 +3,10 @@ package gltoolbox.math;
 import gltoolbox.typedarray.Float32Array;
 
 @:forward
-abstract Euler(EulerClass) from EulerClass{
+abstract Euler(CEuler) from CEuler{
 
 	public inline function new(?rotationX:Float, ?rotationY:Float, ?rotationZ:Float, ?order:Order){
-		this = new EulerClass(rotationX, rotationY, rotationZ, order);
+		this = new CEuler(rotationX, rotationY, rotationZ, order);
 	}
 
 	//array access
@@ -32,7 +32,7 @@ abstract Order(String) to String{
 	var ZYX = 'ZYX';
 }
 
-private class EulerClass{
+private class CEuler{
 
 	public var x(get, set):Float;
 	public var y(get, set):Float;
@@ -58,7 +58,7 @@ private class EulerClass{
 		this.order = order;
 	}
 
-	public inline function set(rotationX:Float, rotationY:Float, rotationZ:Float, order:Order):EulerClass{
+	public inline function set(rotationX:Float, rotationY:Float, rotationZ:Float, order:Order):CEuler{
 		this.x = rotationX;
 		this.y = rotationY;
 		this.z = rotationZ;
@@ -72,26 +72,26 @@ private class EulerClass{
 		return this;
 	}
 
-	public function setFromQuat(q:Quat):EulerClass{
-		trace('not yet implemented');
+	public function setFromQuat(q:Quat):CEuler{
+		throw 'not yet implemented';
 		return this;
 	}
 
-	public function setFromEuler(e:Euler):EulerClass{
+	public function setFromEuler(e:Euler):CEuler{
 		set(e.x, e.y, e.z, e.order);
 		return this;
 	}
 
-	public function setFromMat4(m:Mat4):EulerClass{
-		trace('not yet implemented');
+	public function setFromMat4(m:Mat4):CEuler{
+		throw 'not yet implemented';
 		return this;
 	}
 
-	public inline function clone():EulerClass{
-		return new EulerClass(x, y, z, order);
+	public inline function clone():CEuler{
+		return new CEuler(x, y, z, order);
 	}
 
-	//@! needs review
+	//@! needs review (probably doesn't work)
 	private inline function swappedIdx(i:Int) return order.charCodeAt(i) - 'X'.code;
 
 	private inline function get_x():Float return this.v[0];
@@ -107,5 +107,7 @@ private class EulerClass{
 	private inline function set_swappedX(v:Float):Float return this.v[swappedIdx(0)] = v;
 	private inline function set_swappedY(v:Float):Float return this.v[swappedIdx(1)] = v;
 	private inline function set_swappedZ(v:Float):Float return this.v[swappedIdx(2)] = v;
+
+	//@! todo - toString
 
 }

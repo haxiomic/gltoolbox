@@ -25,11 +25,6 @@ abstract Vec4(VectorDataType) from VectorDataType{
 		return this;
 	}
 
-	public function setFromVec4(v:Vec4):Vec4{
-		set(v.x, v.y, v.z, v.w);
-		return this;
-	}
-
 	public inline function setX(s:Float):Vec4{
 		x = s;
 		return this;
@@ -47,6 +42,11 @@ abstract Vec4(VectorDataType) from VectorDataType{
 
 	public inline function setW(s:Float):Vec4{
 		w = s;
+		return this;
+	}
+
+	public function setFromVec4(v:Vec4):Vec4{
+		set(v.x, v.y, v.z, v.w);
 		return this;
 	}
 

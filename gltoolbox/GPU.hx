@@ -58,10 +58,10 @@ class GPU{
 	}
 
 	//Buffer Tools
-	static public function uploadArray(typedArray:ArrayBufferView, usage:Int = GL.STATIC_DRAW):GLBuffer{
-		var buffer:GLBuffer;
-
-		var buffer = GL.createBuffer();
+	static public function uploadArray(?buffer:GLBuffer, typedArray:ArrayBufferView, usage:Int = GL.STATIC_DRAW):GLBuffer{
+		if(buffer == null)
+			buffer = GL.createBuffer();
+		
 		GL.bindBuffer(GL.ARRAY_BUFFER, buffer);
 		GL.bufferData(GL.ARRAY_BUFFER, typedArray, usage);
 		GL.bindBuffer(GL.ARRAY_BUFFER, null);
@@ -75,7 +75,8 @@ class GPU{
 		height:Int,
 		channelType:Int = GL.RGBA,
 		dataType:Int = GL.UNSIGNED_BYTE,
-		filter:Int = GL.NEAREST,
+		minFilter:Int = GL.NEAREST,
+		magFilter:Int = GL.NEAREST,
 		wrapS:Int = GL.CLAMP_TO_EDGE,
 		wrapT:Int = GL.CLAMP_TO_EDGE,
 		unpackAlignment:Int = 4
@@ -92,8 +93,8 @@ class GPU{
 		GL.bindTexture (GL.TEXTURE_2D, texture);
 
 		//set params
-		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_MIN_FILTER, filter); 
-		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_MAG_FILTER, filter); 
+		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_MIN_FILTER, minFilter); 
+		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_MAG_FILTER, magFilter); 
 		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_WRAP_S, wrapS);
 		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_WRAP_T, wrapT);
 

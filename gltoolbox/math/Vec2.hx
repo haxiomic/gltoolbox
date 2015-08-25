@@ -19,11 +19,6 @@ abstract Vec2(VectorDataType) from VectorDataType{
 		return this;
 	}
 
-	public function setFromVec2(v:Vec2):Vec2{
-		set(v.x, v.y);
-		return this;
-	}
-
 	public inline function setX(s:Float):Vec2{
 		x = s;
 		return this;
@@ -31,6 +26,11 @@ abstract Vec2(VectorDataType) from VectorDataType{
 
 	public inline function setY(s:Float):Vec2{
 		y = s;
+		return this;
+	}
+
+	public function setFromVec2(v:Vec2):Vec2{
+		set(v.x, v.y);
 		return this;
 	}
 

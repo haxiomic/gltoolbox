@@ -4,6 +4,7 @@ import gltoolbox.typedarray.Float32Array;
 
 typedef VectorDataType = Float32Array;
 
+//@! why was this disabled again?
 // @:forward
 // abstract VectorDataType(Float32Array) from Float32Array to Float32Array{
 // 	public inline function new(len:Int){

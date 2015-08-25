@@ -6,9 +6,7 @@ import gltoolbox.typedarray.Float32Array;
 class RectangleGeometry extends Geometry2D{
 
 	public function new(originX:Float, originY:Float, width:Float, height:Float){
-		super();
-		
-		this.vertices = new Float32Array([
+		super(new Float32Array([
 			originX,        originY+height, //top left
 			originX,        originY,        //bottom left
 			originX+width,  originY+height, //top right
@@ -16,9 +14,7 @@ class RectangleGeometry extends Geometry2D{
 			originX+width,  originY,        //bottom right
 			originX+width,  originY+height, //top left
 			originX,        originY         //bottom left
-		]);
-
-		this.drawMode = GL.TRIANGLES;
+		]), GL.TRIANGLES);
 
 		updateVertexCount();
 	}

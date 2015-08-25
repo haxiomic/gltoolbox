@@ -8,8 +8,8 @@ import gltoolbox.typedarray.Float32Array;
 
 class Geometry2D extends Geometry{
 
-	public function new(){
-		super();
+	public function new(vertices:Float32Array, drawMode:Int = GL.TRIANGLES){
+		super(vertices, drawMode);
 		vertexAttribute.itemSize = 2;
 	}
 

@@ -22,11 +22,6 @@ abstract Vec3(VectorDataType) from VectorDataType{
 		return this;
 	}
 
-	public function setFromVec3(v:Vec3):Vec3{
-		set(v.x, v.y, v.z);
-		return this;
-	}
-
 	public inline function setX(s:Float):Vec3{
 		x = s;
 		return this;
@@ -39,6 +34,11 @@ abstract Vec3(VectorDataType) from VectorDataType{
 
 	public inline function setZ(s:Float):Vec3{
 		z = s;
+		return this;
+	}
+
+	public function setFromVec3(v:Vec3):Vec3{
+		set(v.x, v.y, v.z);
 		return this;
 	}
 

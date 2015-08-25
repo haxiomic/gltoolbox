@@ -21,11 +21,11 @@ class Geometry{
 	public var vertexCount(default, null):Int;
 
 	//rendering
-	public var drawMode:Int = GL.TRIANGLES;
+	public var drawMode:Int;
 	public var vertexAttribute:BufferAttributeData<Float32Array>;
 	public var attributes:Map<String, Attribute>;
 
-	public function new(){
+	public function new(vertices:Float32Array, drawMode:Int = GL.TRIANGLES){
 		vertexAttribute = {
 			data: null,
 			itemSize: 1, //set by subclasses
@@ -36,7 +36,12 @@ class Geometry{
 		attributes = [
 			'position' => BufferAttribute(vertexAttribute)
 		];
+
+		this.vertices = vertices;
+		this.drawMode = drawMode;
 	}
+
+	//@! todo .clone()
 
 	//private
 	private function updateVertexCount():Geometry{

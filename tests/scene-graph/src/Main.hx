@@ -188,6 +188,8 @@ class Main extends snow.App {
 	}
 
 	function drawMesh(mesh:Mesh){
+		if(!mesh.visible) return;
+
 		//bind mesh program
 		//@! tmp program type
 		if(programObject.program != currentProgram){
