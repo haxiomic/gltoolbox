@@ -3,10 +3,9 @@
 
 	Utility functions for common GL operations
 
-	@! notes
-	- should be a thin (essentially) standalone interface over GL
-	- no compound types here
-	- do we really need buffer cache?
+	@! todo
+	texture functions
+
 */
 
 package gltoolbox;
@@ -21,14 +20,26 @@ import gltoolbox.typedarray.ArrayBufferView;
 
 class GPU{
 
+	static public var MAX_VERTEX_ATTRIBS(get, null):Null<Int>;
+	static public var MAX_VARYING_VECTORS(get, null):Null<Int>;
+	static public var MAX_VERTEX_UNIFORM_VECTORS(get, null):Null<Int>;
+	static public var MAX_FRAGMENT_UNIFORM_VECTORS(get, null):Null<Int>;
+	static public var MAX_TEXTURE_IMAGE_UNITS(get, null):Null<Int>;
+	static public var MAX_VERTEX_TEXTURE_IMAGE_UNITS(get, null):Null<Int>;
+	static public var MAX_COMBINED_TEXTURE_IMAGE_UNITS(get, null):Null<Int>;
+	static public var MAX_TEXTURE_SIZE(get, null):Null<Int>;
+	static public var MAX_CUBE_MAP_TEXTURE_SIZE(get, null):Null<Int>;
+	static public var MAX_RENDERBUFFER_SIZE(get, null):Null<Int>;
+
 	//Shader Tools
-	static public function uploadShaders(geometryShaderSrc:String, pixelShaderSrc:String):GLProgram{
+	static public function compileShaders(geometryShaderSrc:String, pixelShaderSrc:String):GLProgram{
 		var geometryShader = GL.createShader(GL.VERTEX_SHADER);
 		GL.shaderSource(geometryShader, geometryShaderSrc);
 		GL.compileShader(geometryShader);
 
 		//check for compilation errors
 		if(GL.getShaderParameter(geometryShader, GL.COMPILE_STATUS) == 0){
+			GL.deleteShader(geometryShader);
 			throw 'Geometry shader error: '+GL.getShaderInfoLog(geometryShader);
 		}
 
@@ -38,6 +49,7 @@ class GPU{
 
 		//check for compilation errors
 		if(GL.getShaderParameter(pixelShader, GL.COMPILE_STATUS) == 0){
+			GL.deleteShader(pixelShader);
 			throw 'Pixel shader error: '+GL.getShaderInfoLog(pixelShader);
 		}
 
@@ -64,49 +76,71 @@ class GPU{
 		
 		GL.bindBuffer(GL.ARRAY_BUFFER, buffer);
 		GL.bufferData(GL.ARRAY_BUFFER, typedArray, usage);
-		GL.bindBuffer(GL.ARRAY_BUFFER, null);
 
 		return buffer;
 	}
 
-	//Texture Tools
-	static public function allocateTexture(
-		width:Int,
-		height:Int,
-		channelType:Int = GL.RGBA,
-		dataType:Int = GL.UNSIGNED_BYTE,
-		minFilter:Int = GL.NEAREST,
-		magFilter:Int = GL.NEAREST,
-		wrapS:Int = GL.CLAMP_TO_EDGE,
-		wrapT:Int = GL.CLAMP_TO_EDGE,
-		unpackAlignment:Int = 4
-	):GLTexture{
-
-		#if ios //@! temporary test
-		if(dataType == GL.FLOAT){
-			// trace('GL.FLOAT is not supported, changing to half float');
-			dataType = 0x8D61;//GL_HALF_FLOAT_OES
-		}
-		#end
-
-		var texture:GLTexture = GL.createTexture();
-		GL.bindTexture (GL.TEXTURE_2D, texture);
-
-		//set params
-		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_MIN_FILTER, minFilter); 
-		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_MAG_FILTER, magFilter); 
-		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_WRAP_S, wrapS);
-		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_WRAP_T, wrapT);
-
-		GL.pixelStorei(GL.UNPACK_ALIGNMENT, unpackAlignment); //see http://www.khronos.org/opengles/sdk/docs/man/xhtml/glPixelStorei.xml
-
-		//set data
-		GL.texImage2D(GL.TEXTURE_2D, 0, channelType, width, height, 0, channelType, dataType, null);
-
-		//unbind
-		GL.bindTexture(GL.TEXTURE_2D, null);
-
-		return texture;
+	//properties
+	//cache important properties
+	static private function get_MAX_VERTEX_ATTRIBS():Null<Int>{
+		if(MAX_VERTEX_ATTRIBS == null)
+			MAX_VERTEX_ATTRIBS = GL.getParameter(GL.MAX_VERTEX_ATTRIBS);
+		return MAX_VERTEX_ATTRIBS;
 	}
+
+	static private function get_MAX_VARYING_VECTORS():Null<Int>{
+		if(MAX_VARYING_VECTORS == null)
+			MAX_VARYING_VECTORS = GL.getParameter(GL.MAX_VARYING_VECTORS);
+		return MAX_VARYING_VECTORS;
+	}
+
+	static private function get_MAX_VERTEX_UNIFORM_VECTORS():Null<Int>{
+		if(MAX_VERTEX_UNIFORM_VECTORS == null)
+			MAX_VERTEX_UNIFORM_VECTORS = GL.getParameter(GL.MAX_VERTEX_UNIFORM_VECTORS);
+		return MAX_VERTEX_UNIFORM_VECTORS;
+	}
+
+	static private function get_MAX_FRAGMENT_UNIFORM_VECTORS():Null<Int>{
+		if(MAX_FRAGMENT_UNIFORM_VECTORS == null)
+			MAX_FRAGMENT_UNIFORM_VECTORS = GL.getParameter(GL.MAX_FRAGMENT_UNIFORM_VECTORS);
+		return MAX_FRAGMENT_UNIFORM_VECTORS;
+	}
+
+	static private function get_MAX_TEXTURE_IMAGE_UNITS():Null<Int>{
+		if(MAX_TEXTURE_IMAGE_UNITS == null)
+			MAX_TEXTURE_IMAGE_UNITS = GL.getParameter(GL.MAX_TEXTURE_IMAGE_UNITS);
+		return MAX_TEXTURE_IMAGE_UNITS;
+	}
+
+	static private function get_MAX_VERTEX_TEXTURE_IMAGE_UNITS():Null<Int>{
+		if(MAX_VERTEX_TEXTURE_IMAGE_UNITS == null)
+			MAX_VERTEX_TEXTURE_IMAGE_UNITS = GL.getParameter(GL.MAX_VERTEX_TEXTURE_IMAGE_UNITS);
+		return MAX_VERTEX_TEXTURE_IMAGE_UNITS;
+	}
+
+	static private function get_MAX_COMBINED_TEXTURE_IMAGE_UNITS():Null<Int>{
+		if(MAX_COMBINED_TEXTURE_IMAGE_UNITS == null)
+			MAX_COMBINED_TEXTURE_IMAGE_UNITS = GL.getParameter(GL.MAX_COMBINED_TEXTURE_IMAGE_UNITS);
+		return MAX_COMBINED_TEXTURE_IMAGE_UNITS;
+	}
+
+	static private function get_MAX_TEXTURE_SIZE():Null<Int>{
+		if(MAX_TEXTURE_SIZE == null)
+			MAX_TEXTURE_SIZE = GL.getParameter(GL.MAX_TEXTURE_SIZE);
+		return MAX_TEXTURE_SIZE;
+	}
+
+	static private function get_MAX_CUBE_MAP_TEXTURE_SIZE():Null<Int>{
+		if(MAX_CUBE_MAP_TEXTURE_SIZE == null)
+			MAX_CUBE_MAP_TEXTURE_SIZE = GL.getParameter(GL.MAX_CUBE_MAP_TEXTURE_SIZE);
+		return MAX_CUBE_MAP_TEXTURE_SIZE;
+	}
+
+	static private function get_MAX_RENDERBUFFER_SIZE():Null<Int>{
+		if(MAX_RENDERBUFFER_SIZE == null)
+			MAX_RENDERBUFFER_SIZE = GL.getParameter(GL.MAX_RENDERBUFFER_SIZE);
+		return MAX_RENDERBUFFER_SIZE;
+	}
+
 
 }

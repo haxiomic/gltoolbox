@@ -178,7 +178,7 @@ class Main extends snow.App {
 	//drawing functions
 	function drawObject3D(object:Object3D){
 		switch Type.getClass(object){
-			case Mesh:
+			case Mesh://@! doesn't handle mesh subclasses.
 				drawMesh(untyped object);
 		}
 

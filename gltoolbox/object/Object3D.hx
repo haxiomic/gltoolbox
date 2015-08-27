@@ -23,6 +23,7 @@ class Object3D{
 								//if modified, 'worldMatrixNeedsUpdate' should be set to true
 
 	public var worldMatrix(get, never):Mat4; //computed from hierarchy
+	public var worldMatrixNeedsUpdate(get, set):Bool;
 
 	public var children:Array<Object3D>;
 	public var parent(default, null):Object3D;
@@ -32,7 +33,6 @@ class Object3D{
 	private var scale:Vec3;
 
 	private var localMatrix(get, set):Mat4; //if modified, 'worldMatrixNeedsUpdate' should be set to true
-	private var worldMatrixNeedsUpdate(get, set):Bool;
 	private var localMatrixNeedsUpdate:Bool;
 	//internal
 	private var _worldMatrixNeedsUpdate:Bool;

@@ -192,7 +192,7 @@ abstract Mat4(VectorDataType) from VectorDataType{
 
 	public function compose(position:Vec3, rotation:Orientation, scale:Vec3):Mat4{
 		/*
-		if rotation didn't eliminate position:
+		if rotation didn't eliminate position, we could set components optionally:
 
 		if(scale == null && rotation == null){
 			//nothing more to do (assuming position has been set)
@@ -340,84 +340,5 @@ abstract Mat4(VectorDataType) from VectorDataType{
 
 		return into;
 	}
-
-	//Useful transformation matrices
-	//@! do we really need these?
-
-	/*@:impl
-	static public function makeTranslation(?mat4:Mat4, ?vec3:Vec3, x:Float = 0, y:Float = 0, z:Float = 0):Mat4{
-		if(mat4 == null) mat4 = new Mat4();
-		if(vec3 != null){
-			x = vec3.x;
-			y = vec3.y;
-			z = vec3.z;
-		}
-		mat4.set(
-			1, 0, 0, x,
-			0, 1, 0, y,
-			0, 0, 1, z,
-			0, 0, 0, 1
-		);
-		return mat4;
-	}
-
-	@:impl
-	static public function makeScale(?mat4:Mat4, ?vec3:Vec3, x:Float = 1, y:Float = 1, z:Float = 1):Mat4{
-		if(mat4 == null) mat4 = new Mat4();
-		if(vec3 != null){
-			x = vec3.x;
-			y = vec3.y;
-			z = vec3.z;
-		}
-		mat4.set(
-			x, 0, 0, 0,
-			0, y, 0, 0,
-			0, 0, z, 0,
-			0, 0, 0, 1
-		);
-		return mat4;
-	}
-
-	@:impl
-	static public function makeRotationX(?mat4:Mat4, theta:Float):Mat4{
-		if(mat4 == null) mat4 = new Mat4();
-		var c = Math.cos(theta);
-		var s = Math.sin(theta);
-		mat4.set(
-			1, 0,  0, 0,
-			0, c, -s, 0,
-			0, s,  c, 0,
-			0, 0,  0, 1
-		);
-		return mat4;
-	}
-
-	@:impl
-	static public function makeRotationY(?mat4:Mat4, theta:Float):Mat4{
-		if(mat4 == null) mat4 = new Mat4();
-		var c = Math.cos(theta);
-		var s = Math.sin(theta);
-		mat4.set(
-			 c, 0, s, 0,
-			 0, 1, 0, 0,
-			-s, 0, c, 0,
-			 0, 0, 0, 1
-		);
-		return mat4;
-	}
-
-	@:impl
-	static public function makeRotationZ(?mat4:Mat4, theta:Float):Mat4{
-		if(mat4 == null) mat4 = new Mat4();
-		var c = Math.cos(theta);
-		var s = Math.sin(theta);
-		mat4.set(
-			c, -s, 0, 0,
-			s,  c, 0, 0,
-			0,  0, 1, 0,
-			0,  0, 0, 1
-		);
-		return mat4;
-	}*/
 
 }
