@@ -1,9 +1,9 @@
 {
-  "name": "gltoolbox",
-  "url": "https://github.com/haxiomic/GLToolbox",
+  "name": "nucleus",
+  "url": "https://github.com/haxiomic/nucleus",
   "license": "MIT",
   "tags": [],
-  "description": "Tools for haxe OpenGL programs",
+  "description": "Simplifying interface over OpenGL ES",
   "version": "0.1.0",
   "releasenote": ""
 }

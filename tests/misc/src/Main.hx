@@ -1,68 +1,80 @@
-/*
-	- Questions
-		- efficient type casing (yes, render object)
-		- grouping sub classes
-*/
+import nucleus.math.Vec2;
+import nucleus.math.Vec3;
+import nucleus.math.Color;
+import nucleus.typedarray.Float32Array;
+import nucleus.gl.GL;
+import nucleus.GPU;
 
-import gltoolbox.object.Object3D;
-import gltoolbox.object.Mesh;
-
-abstract RenderObject(Dynamic) from Dynamic to Mesh to Cube to Tri{}
-
-class Cube extends Mesh{
-	public function new(){
-		super(null, null);
-	}
-}
-
-class Tri extends Cube{
-	public var prop:String = "coolio";
-	public function new(){
-		super();
-	}
-}
-
-class Quad extends Tri{
-	public function new(){
-		super();
-	}
-}
+using ShaderHelper;
 
 class Main{
 
-	static public function main(){
-		var o3d = new Object3D();
-		var mesh = new Mesh(null, null);
-		var mesh2 = new Mesh(null, null);
-		var cube = new Cube();
+	inline function new(){
+		GL.clearColor(0,1,0,1);
+		GL.clear(GL.COLOR_BUFFER_BIT);
 
-		var objects = new Array<Object3D>();
-		objects.push(o3d);
-		objects.push(mesh);
-		objects.push(mesh2);
-		objects.push(cube);
-		objects.push(new Tri());
-		objects.push(new Quad());
+		inline function rectArray(originX:Float, originY:Float, width:Float, height:Float){
+			//GL.TRIANGLES
+			return new Float32Array([
+				originX,        originY+height, //top left
+				originX,        originY,        //bottom left
+				originX+width,  originY+height, //top right
 
-		trace('Method 2');
-		for(obj in objects){
-			var o : RenderObject = obj;
-			var c = Type.getClass(o);
-			switch c{
-				case Mesh:
-					trace('is Mesh, (o:Mesh).visible = ${(o:Mesh).visible}');
-				case Object3D:
-					trace('is Object3D');
-				case Cube:
-					trace('is Cube');
-				case Tri:
-					trace('is Tri: ${(o:Tri).prop}');
-				case Quad:
-					trace('is Quad');
-				default:
-					trace('is unknown');
-			}
+				originX+width,  originY,        //bottom right
+				originX+width,  originY+height, //top left
+				originX,        originY         //bottom left
+			]);
 		}
+
+		var vertices = rectArray(0, 0, 1, 1);
+
+		var vertShader = "
+			attribute vec2 position;
+			void main(){
+				gl_Position = vec4(position.xy, 0.0, 1.0);
+			}
+		";
+
+		var fragShader = "
+			void main(){
+				gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+			}
+		";
+
+		var shaderProgram = GPU.compileShaders(vertShader, fragShader);
+	}
+
+	function render(time:Float){
+	}
+
+	static public inline function main(){
+		//bootstrap
+		#if js
+		var document = js.Browser.document;
+		document.body.style.padding = "0";
+		document.body.style.margin = "0";
+
+		var canvas = document.createCanvasElement();
+		canvas.width = Std.int(js.Browser.window.innerWidth*.95);
+		canvas.height = js.Browser.window.innerHeight;
+		canvas.style.display = "block";
+		canvas.style.margin = "0 auto";
+		document.body.appendChild(canvas);
+		GL.context = canvas.getContext('webgl');
+		#end
+
+		var m = new Main();
+
+		function frameLoop(time:Float){
+			m.render(time);
+			#if js
+			js.Browser.window.requestAnimationFrame(frameLoop);
+			#end
+		}
+
+		#if js
+		js.Browser.window.requestAnimationFrame(frameLoop);
+		#end
 	}
 
 }

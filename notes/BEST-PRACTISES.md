@@ -1,7 +1,7 @@
 # Best practices
 
 ## Handling context lost https://www.khronos.org/webgl/wiki/HandlingContextLost
-		- we'll need to null bound slot on textures when context lost
+		- we'll need to null unit on textures when context lost
 		- events "webglcontextlost", "webglcontextrestored"
 		- rendering loop should be turned off when context is lost but the event isn't fired straight away
 			- context lost can occur during the rendering loop

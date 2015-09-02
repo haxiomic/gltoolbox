@@ -1,5 +1,15 @@
 #Immediate Todo
 - Shaders and Texture classes
+	//can we do shader.uploadUniform('name', value); and have it type select?
+	//or must we do, value.uploadAsUniform(location); ?
+
+	//try the null check with @:overload
+	//try sneaky overload with using
+	//last option is to just have usings on a type-by type basis
+
+	//additionally, get rid of GPU.hx, isntead have Nucleus.hx which maybe manages everything?
+	//-> like assignUnit or activateShader if we have that.
+
 - Indices UVs on Geometry (use drawElements)
 - Shading on Mesh with new Shader/Program class
 - Split core and renderer
@@ -11,8 +21,11 @@
 
 ## Misc Unresolved
 	- names
-	#1	glNucleus
-	#2	glCoreBox
+		HaxiumNucleus
+		HaxiumRender
+		HaxiumUI
+		glMinimum
+		glNucleus
 	
 		glFoundation
 		glEssentials
@@ -50,7 +63,26 @@
 		- chainability should be present everywhere
 		- toString()s for all objects
 
+	- Buffer formats for use in vertexAttribPointer which sets the format of a buffer for use in a shader
+		-> number of values per point, data type
+		read http://blog.tojicode.com/2011/05/interleaved-array-basics.html to understand vertexAttribPointer
+		-> So when we have an attribute buffer, the format is critical to enable interleaving
+
+	- Instancing adds extra/modified calls when drawing and uploading uniforms. These sorts of modifications should be easy within the design of core
+
+	-> Same sort of issue with texture. The sampling data needs to be decoupled somewhat
+
+	- The philosophy of core is to be minimal and extenable! Providing just the necessities to make life easier
+
+	- Need to consider multiple passes - minimize constraining of shader use
+	- Consider seperating textuers from Sampling settings for WebGL 2.0 harmony
+
 	- Noteworthy extensions to consider
+		coming by default in WebGL 2.0
+		ANGLE_instanced_arrays - easy repeated rendering of same geometry
+		OES_vertex_array_object - one object for vertices and indices
+		WEBGL_draw_buffers - single draw call write to multiple multiple targets
+
 		var glExtensionTextureFloat = gl.getExtension( 'OES_texture_float' );
 		var glExtensionTextureHalfFloat = gl.getExtension( 'OES_texture_half_float' );
 		var glExtensionDebugRendererInfo = gl.getExtension( 'WEBGL_debug_renderer_info' );

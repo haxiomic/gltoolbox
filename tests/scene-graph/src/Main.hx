@@ -3,20 +3,20 @@ import snow.types.Types.AppConfig;
 import snow.types.Types.ModState;
 import snow.types.Types.Key;
 
-import gltoolbox.core.Attribute;
-import gltoolbox.gl.GL;
-import gltoolbox.gl.GLBuffer;
-import gltoolbox.gl.GLProgram;
-import gltoolbox.gl.GLUniformLocation;
-import gltoolbox.GPU;
-import gltoolbox.math.Color;
-import gltoolbox.object.Object3D;
-import gltoolbox.object.Mesh;
-import gltoolbox.math.*;
-import gltoolbox.geometry.Geometry;
-import gltoolbox.geometry.Geometry2D;
-import gltoolbox.geometry.RegularPolygonGeometry;
-import gltoolbox.geometry.RectangleGeometry;
+import nucleus.core.Attribute;
+import nucleus.gl.GL;
+import nucleus.gl.GLBuffer;
+import nucleus.gl.GLProgram;
+import nucleus.gl.GLUniformLocation;
+import nucleus.GPU;
+import nucleus.math.Color;
+import nucleus.object.Object3D;
+import nucleus.object.Mesh;
+import nucleus.math.*;
+import nucleus.geometry.Geometry;
+import nucleus.geometry.Geometry2D;
+import nucleus.geometry.RegularPolygonGeometry;
+import nucleus.geometry.RectangleGeometry;
 
 typedef TmpProgramObject = {
 	var program:GLProgram;
@@ -27,7 +27,7 @@ typedef TmpProgramObject = {
 class Main extends snow.App {
 	//snow boot
 	override function config( config:AppConfig ):AppConfig{
-		config.window.title = 'GLToolbox Scene Graph Test';
+		config.window.title = 'nucleus Scene Graph Test';
 		config.render.antialiasing = 0;
 		return config;
 	}

@@ -39,7 +39,7 @@ class Main{
 		for(name in names){
 			var filename = '$name.hx';
 			trace('saving $filename');
-			File.saveContent(dir+'/'+filename, typedArrayModule(name, 'gltoolbox.typedarray'));
+			File.saveContent(dir+'/'+filename, typedArrayModule(name, 'nucleus.typedarray'));
 		}
 
 		//GL
@@ -62,7 +62,7 @@ class Main{
 		for(name in names){
 			var filename = '$name.hx';
 			trace('saving $filename');
-			File.saveContent(dir+'/'+filename, glModule(name, 'gltoolbox.gl'));
+			File.saveContent(dir+'/'+filename, glModule(name, 'nucleus.gl'));
 		}
 
 		//special

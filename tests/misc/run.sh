@@ -1,2 +1,2 @@
-haxe build.hxml &&
-node bin/main.js
+haxe build.hxml
+# && node bin/main.js

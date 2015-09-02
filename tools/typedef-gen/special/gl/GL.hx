@@ -1,4 +1,4 @@
-package gltoolbox.gl;
+package nucleus.gl;
 
 #if snow
 typedef GL = snow.modules.opengl.GL;

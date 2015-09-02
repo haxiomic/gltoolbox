@@ -1,4 +1,4 @@
-package gltoolbox.gl;
+package nucleus.gl;
 
 #if snow || lime || nme || hxsdl
 typedef GLShaderPrecisionFormat = {
