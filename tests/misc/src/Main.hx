@@ -88,6 +88,24 @@ class Main{
 			NU.assignTextureUnit(texture);
 			GL.uniform1i(...);
 		}
+		NU.setUniformVec2Array(testProgram.uniforms['touches'], touches:Array<Vec2>);{
+			//copy out array
+			for(t in touches){
+				vec2ArrayTmp[...] = t[0];
+				vec2ArrayTmp[...] = t[1];
+			}
+			GL.uniform2fv(loc, vec2ArrayTmp);
+		}
+		//NU.setUniformVec2FlatArray(loc, v:Float32Array);
+		//@! needs thought
+		NU.setUniformStruct(???, light:Map<String, Dynamic>);{
+			//first param describes light structure & locations
+			//@! should be careful of nested structs
+			for(key in light){
+				//switch on type
+				this.setUniform*(, light[key])
+			}
+		}
 
 		NU.drawArrays(DrawModes.TRIANGLES, 0, vertices1.count);
 
@@ -104,6 +122,7 @@ class Main{
 		NU.setAttributeBuffer(testProgram.attributes['uvs'], uvs);
 		NU.setUniformVec3(testProgram.uniforms['color'], color1);
 		NU.setUniformTexture(testProgram.uniforms['texture'], texture);
+		NU.setUniformVec2Array(testProgram.uniforms['touches'], touches);
 		NU.drawIndexed(indexBuffer, DrawModes.TRIANGLES);
 
 	}

@@ -60,4 +60,9 @@ class Buffer{
 		return this;
 	}
 
+
+	static private inline function activate(){
+		//@! track active buffer
+	}
+
 }

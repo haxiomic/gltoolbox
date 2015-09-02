@@ -8,6 +8,18 @@
 	- Dynamic data with needsUpdate:Bool
 	- Automatic mip-mapping support
 	- anisotropy support
+
+	All texture functions:
+	- compressedTexImage2D(target:Int, level:Int, internalformat:Int, width:Int, height:Int, border:Int, data:ArrayBufferView):Void
+	- compressedTexSubImage2D(target:Int, level:Int, xoffset:Int, yoffset:Int, width:Int, height:Int, format:Int, data:ArrayBufferView):Void
+	- copyTexImage2D(target:Int, level:Int, internalformat:Int, x:Int, y:Int, width:Int, height:Int, border:Int):Void
+	- copyTexSubImage2D(target:Int, level:Int, xoffset:Int, yoffset:Int, x:Int, y:Int, width:Int, height:Int):Void
+	- texImage2D(target:Int, level:Int, internalformat:Int, width:Int, height:Int, border:Int, format:Int, type:Int, data:ArrayBufferView):Void
+	- texParameterf(target:Int, pname:Int, param:Float):Void
+	- texParameteri(target:Int, pname:Int, param:Int):Void
+	- texSubImage2D(target:Int, level:Int, xoffset:Int, yoffset:Int, width:Int, height:Int, format:Int, type:Int, data:ArrayBufferView):Void
+	- generateMipmap(target:Int):Void
+	- getTexParameter(target:Int, pname:Int):Dynamic
 */
 
 package nucleus.texture;
