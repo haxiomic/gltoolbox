@@ -3,6 +3,14 @@
 
 	Simplifying interface over OpenGL ES
 	Designed to make use of the advantages haxe brings
+
+	- Removed need for ARRAY_BUFFER and ELEMENT_ARRAY_BUFFER
+	- Removed need for texture units
+	- Removed need for binding calls
+	- Automatic shader compilation
+	- Easy textures
+	- Easy buffer formats
+	- Easy framebuffers
 */
 
 package nucleus;

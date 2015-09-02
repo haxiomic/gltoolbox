@@ -29,6 +29,8 @@ class Main{
 			]);
 		}
 
+		//@!
+		//unhappy with this part:
 		var attributesBuffer = new Buffer(rectArray(0,0,1,1), BufferUsage.STATIC_DRAW);
 		vertices = new FormattedData(attributesBuffer, 2, 20, 0, false);
 		uvs = new FormattedData(attributesBuffer, 2, 20, 12, false);
@@ -70,7 +72,7 @@ class Main{
 
 		NU.setAttributeBuffer(testProgram.attributes['vertices'], vertices1:FormattedBuffer);{
 			// GL.bindBuffer(GL.ARRAY_BUFFER, vertices1.buffer);
-			Buffer.activate(uvs1.buffer);
+			Buffer.activate(uvs1.buffer);//private api
 			GL.vertexAttribPointer(testProgram.attributes['vertices'], vertices1.size, vertices1.type, vertices1.normalize, vertices1.stride, vertices1.offset);
 		}
 
@@ -94,6 +96,15 @@ class Main{
 			GL.bindBuffer(GL.ELEMENT_ARRAY_BUFFER, indexBuffer);
 			GL.drawElements(...);
 		}
+
+		// ----------------------------- //
+		//in breif:
+		NU.useProgram(testProgram);
+		NU.setAttributeBuffer(testProgram.attributes['vertices'], vertices1);
+		NU.setAttributeBuffer(testProgram.attributes['uvs'], uvs);
+		NU.setUniformVec3(testProgram.uniforms['color'], color1);
+		NU.setUniformTexture(testProgram.uniforms['texture'], texture);
+		NU.drawIndexed(indexBuffer, DrawModes.TRIANGLES);
 
 	}
 

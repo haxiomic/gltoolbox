@@ -25,7 +25,7 @@ Interlacing:
 	[p p p u u p p p u u ... ]
 	position{
 		offset = 0
-		stride = sizeOf(uv.type)*uv.valuesPerElement + sizeOf(position.type)*position.valuesPerElement
+		stride = sizeOf(position.type)*position.valuesPerElement + sizeOf(uv.type)*uv.valuesPerElement
 	}
 	uv{
 		offset = sizeOf(position.type)*position.valuesPerElement

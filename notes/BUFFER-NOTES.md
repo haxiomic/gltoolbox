@@ -60,11 +60,14 @@ VERTEX_ATTRIB_ARRAY_BUFFER_BINDING
 - The formatted data should allow for interlacing
 
 class FormattedBuffer{
-	- elementSize
-	- number of elements
+	- elementSize {1, 2, 3, 4}
+	- number of elements {1...•}
 	- byteStride
 	- offset
 	- normalized
 	- count
 	- internal buffer
 }
+
+> What if we have different types of buffers, like Vec3Buffer?
+	< would need to be careful to allow interlacing
