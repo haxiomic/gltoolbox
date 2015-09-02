@@ -11,8 +11,10 @@ import nucleus.gl.GL;
 import nucleus.gl.GLBuffer;
 import nucleus.gl.GLTexture;
 import nucleus.gl.GLProgram;
+import nucleus.gl.GLContextAttributes;
 import nucleus.typedarray.Float32Array;
 import nucleus.typedarray.ArrayBufferView;
+import nucleus.math.RGBA;
 
 class NU{
 
@@ -34,8 +36,8 @@ class NU{
 		GL.disable(cap);
 	static public inline function cullFace(mode:FaceMode):Void
 		GL.cullFace(mode);
-	static public inline function fontFace(mode:FrontFaceMode):Void
-		GL.fontFace(mode);
+	static public inline function frontFace(mode:FrontFaceMode):Void
+		GL.frontFace(mode);
 	static public inline function hint(target:HintTarget, mode:HintMode):Void
 		GL.hint(target, mode);
 	static public inline function lineWidth(width:Float):Void
@@ -49,12 +51,8 @@ class NU{
 	static public inline function pixelStorei(pname:PixelStorageMode, param:Int):Void
 		GL.pixelStorei(pname, param);
 	//Clear
-	static public inline function clearColor(?rgba:RGBA, ?red:Float, ?green:Float, ?blue:Float, ?alpha:Float):Void{
-		if(rgba != null)
-			GL.clearColor(rgba.r, rgba.g, rgba.b, rgba.a);
-		else
-			GL.clearColor(red, green, blue, alpha);		
-	}
+	static public inline function clearColor(red:Float, green:Float, blue:Float, alpha:Float):Void
+		GL.clearColor(red, green, blue, alpha);
 	static public inline function clearDepth(depth:Float):Void
 		GL.clearDepth(depth);
 	static public inline function clearStencil(s:Int):Void
@@ -80,12 +78,8 @@ class NU{
 	static public inline function stencilOpSeparate(face:FaceMode, fail:Action, zfail:Action, zpass:Action):Void
 		GL.stencilOpSeparate(face, fail, zfail, zpass);
 	//Blending
-	static public inline function blendColor(?rgba:RGBA, ?red:Float, ?green:Float, ?blue:Float, ?alpha:Float):Void{
-		if(rgba != null)
-			GL.blendColor(rgba.r, rgba.g, rgba.b, rgba.a);
-		else
-			GL.blendColor(red, green, blue, alpha);
-	}
+	static public inline function blendColor(red:Float, green:Float, blue:Float, alpha:Float):Void
+		GL.blendColor(red, green, blue, alpha);
 	static public inline function blendEquation(mode:BlendEquation):Void
 		GL.blendEquation(mode);
 	static public inline function blendEquationSeparate(modeRGB:BlendEquation, modeAlpha:BlendEquation):Void
@@ -98,7 +92,7 @@ class NU{
 	static public inline function getExtension(name:String):Dynamic
 		return GL.getExtension(name);
 	static public inline function getSupportedExtensions():Array<String>
-		return GL.getSupportedExtensions(name);
+		return GL.getSupportedExtensions();
 
 
 	/* Query Global State */
@@ -120,10 +114,13 @@ class NU{
 	/* Draw */
 	static public inline function clear(mask:ClearBit):Void
 		GL.clear(mask);
-	static public inline function drawArrays(mode:DrawMode, first:Int, count:Int):Void
-		GL.drawArrays(mode, first, count);
-	static public inline function drawElements(mode:DrawMode, count:Int, type:IndicesType, offset:Int):Void
-		GL.drawElements(mode, count, type, offset);
+
+	//@! potentially replace with calls to FormattedData
+	// static public inline function drawArrays(mode:DrawMode, first:Int, count:Int):Void
+	// 	GL.drawArrays(mode, first, count);
+	// static public inline function drawElements(mode:DrawMode, count:Int, type:IndicesType, offset:Int):Void
+	// 	GL.drawElements(mode, count, type, offset);
+
 	static public inline function viewport(x:Int, y:Int, width:Int, height:Int):Void
 		GL.viewport(x, y, width, height);
 	static public inline function scissor(x:Int, y:Int, width:Int, height:Int):Void
@@ -338,7 +335,7 @@ abstract ErrorCode(Int) to Int from Int{
 	var INVALID_ENUM                       = GL.INVALID_ENUM;
 	var INVALID_VALUE                      = GL.INVALID_VALUE;
 	var INVALID_OPERATION                  = GL.INVALID_OPERATION;
-	var GL_INVALID_FRAMEBUFFER_OPERATION   = GL.GL_INVALID_FRAMEBUFFER_OPERATION;
+	var GL_INVALID_FRAMEBUFFER_OPERATION   = GL.INVALID_FRAMEBUFFER_OPERATION;
 	var OUT_OF_MEMORY                      = GL.OUT_OF_MEMORY;
 }
 
@@ -406,9 +403,9 @@ abstract BlendFactor(Int) to Int from Int{
 //Draw
 @:enum
 abstract ClearBit(Int) to Int from Int{
-	var DEPTH_BUFFER_BIT                   = DEPTH_BUFFER_BIT;
-	var STENCIL_BUFFER_BIT                 = STENCIL_BUFFER_BIT;
-	var COLOR_BUFFER_BIT                   = COLOR_BUFFER_BIT;
+	var DEPTH_BUFFER_BIT                   = GL.DEPTH_BUFFER_BIT;
+	var STENCIL_BUFFER_BIT                 = GL.STENCIL_BUFFER_BIT;
+	var COLOR_BUFFER_BIT                   = GL.COLOR_BUFFER_BIT;
 }
 
 @:enum

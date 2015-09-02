@@ -1,9 +1,12 @@
-Regarding Units:
+Easy way to enable/change ANIOSTROPY
 
+
+
+SOLVED
+Regarding Units:
 although each unit can hold two textures, TEXTURE_2D or TEXTURE_CUBE_MAP
 you can't use both a TEXTURE_2D and a CUBE_MAP on a texture unit AT THE SAME TIME in a shader.
 -> to avoid issues this feature isn't used; each texture is given its own slot instead
-
 
 
 SOLVED

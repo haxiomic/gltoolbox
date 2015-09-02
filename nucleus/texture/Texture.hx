@@ -18,9 +18,9 @@ import nucleus.Constants;
 
 class Texture{
 
+	public var data(get, set):ArrayBufferView;
 	public var width(get, set):Int;
 	public var height(get, set):Int;
-	public var data(get, set):ArrayBufferView;
 
 	public var format(get, set):Format;
 	public var dataType(get, set):DataType;
@@ -32,8 +32,8 @@ class Texture{
 	public var anisotropy(get, set):Int;
 
 	public var target(get, null):Targets = Targets.TEXTURE_2D;
-	public var glTexture(get, null):GLTexture;
 
+	private var glTexture(get, null):GLTexture;
 	private var unit:Null<Int>;
 
 	public function new(
@@ -62,7 +62,7 @@ class Texture{
 		this.anisotropy = anisotropy;
 	}
 
-	public function allocate():Texture{
+	public function initialize():Texture{
 		glTexture = GL.createTexture();
 
 		Texture.activate(this);
@@ -101,24 +101,26 @@ class Texture{
 	static private function assignUnit(texture:Texture):Int{
 		//in principle, a texture unit will be good for at least 1 shader
 		//CPU-side
-		//texture already bound to a unit, no need to re-bind
-		if(texture.unit != null)
-			return texture.unit;
+		var u:Int;
+		if(texture.unit != null){
+			//texture already bound to a unit, no need to re-bind
+			u = texture.unit;
+		}else{
+			u = unitIdx;
+			advanceUnit();
 
-		var u = unitIdx;
-		advanceUnit();
+			//clear texture already in unit
+			if(units[u] != null)
+				units[u].unit = null;
 
-		//clear texture already in unit
-		if(units[u] != null)
-			units[u].unit = null;
+			//put texture in current unit
+			units[u] = texture;
+			texture.unit = u;
 
-		//put texture in current unit
-		units[u] = texture;
-		texture.unit = u;
-
-		//GPU-side
-		GL.activeTexture(GL.TEXTURE0 + texture.unit);
-		GL.bindTexture(texture.target, texture.glTexture);
+			//GPU-side
+			GL.activeTexture(GL.TEXTURE0 + texture.unit);
+			GL.bindTexture(texture.target, texture.glTexture);
+		}
 
 		return u;
 	}

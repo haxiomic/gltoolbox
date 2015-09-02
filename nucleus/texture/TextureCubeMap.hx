@@ -2,7 +2,7 @@ package nucleus.texture;
 
 import nucleus.Constants;
 
-class CubeMap extends Texture{
+class TextureCubeMap extends Texture{
 
 	//@! three.js uses images array
 

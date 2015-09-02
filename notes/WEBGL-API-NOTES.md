@@ -9,6 +9,9 @@
 		- _cannot_ be used as a sampler in a shader (=no rtt)
 		- useful for fast transfer operations
 		- can store depth or stencil, not good for post processing
+
+		DrawArrays draws using only the buffer bound to ARRAY_BUFFER
+		DrawElements uses the ARRAY_BUFFER as a vertex lookup and ELEMENT_ARRAY_BUFFER as a list of indices
 */
 
 //------------ Untouched in Nucleus ------------ //
@@ -90,7 +93,6 @@ isRenderbuffer(renderbuffer:GLRenderbuffer):Bool
 isShader(shader:GLShader):Bool
 isTexture(texture:GLTexture):Bool
 
-bindAttribLocation(program:GLProgram, index:Int, name:String):Void
 bindBuffer(target:Int, buffer:GLBuffer):Void
 bindFramebuffer(target:Int, framebuffer:GLFramebuffer):Void
 bindRenderbuffer(target:Int, renderbuffer:GLRenderbuffer):Void
@@ -101,13 +103,19 @@ checkFramebufferStatus(target:Int):Int
 framebufferRenderbuffer(target:Int, attachment:Int, renderbuffertarget:Int, renderbuffer:GLRenderbuffer):Void
 framebufferTexture2D(target:Int, attachment:Int, textarget:Int, texture:GLTexture, level:Int):Void
 readPixels(x:Int, y:Int, width:Int, height:Int, format:Int, type:Int, data:ArrayBufferView):Void
+// - framebuffer state
+getFramebufferAttachmentParameter(target:Int, attachment:Int, pname:Int):Dynamic
 
 //renderbuffer
 renderbufferStorage(target:Int, internalformat:Int, width:Int, height:Int):Void //create and initialize a renderbuffer object's data store
+// - renderbuffer state
+getRenderbufferParameter(target:Int, pname:Int):Dynamic
 
-//buffer data
+//buffer
 bufferData(target:Int, data:ArrayBufferView, usage:Int):Void
 bufferSubData(target:Int, offset:Int, data:ArrayBufferView):Void
+// - buffer state
+getBufferParameter(target:Int, pname:Int):Dynamic
 
 //texture
 //-unresolved
@@ -120,10 +128,13 @@ texParameterf(target:Int, pname:Int, param:Float):Void
 texParameteri(target:Int, pname:Int, param:Int):Void
 texSubImage2D(target:Int, level:Int, xoffset:Int, yoffset:Int, width:Int, height:Int, format:Int, type:Int, data:ArrayBufferView):Void
 generateMipmap(target:Int):Void
+// - texture state
+getTexParameter(target:Int, pname:Int):Dynamic
 //-resolved
 activeTexture(texture:Int):Void //sets active texture
 
 //shader
+//-unresolved
 useProgram(program:GLProgram):Void
 attachShader(program:GLProgram, shader:GLShader):Void
 compileShader(shader:GLShader):Void
@@ -133,9 +144,26 @@ enableVertexAttribArray(index:Int):Void
 disableVertexAttribArray(index:Int):Void
 shaderSource(shader:GLShader, source:String):Void
 validateProgram(program:GLProgram):Void
+bindAttribLocation(program:GLProgram, index:Int, name:String):Void
+// - shader & program state
+getShaderParameter(shader:GLShader, pname:Int):Int
+getShaderPrecisionFormat(shadertype:Int, precisiontype:Int):GLShaderPrecisionFormat
+getShaderSource(shader:GLShader):String
+getShaderInfoLog(shader:GLShader):String
+getProgramParameter(program:GLProgram, pname:Int):Int
+getProgramInfoLog(program:GLProgram):String
+getActiveAttrib(program:GLProgram, index:Int):GLActiveInfo
+getActiveUniform(program:GLProgram, index:Int):GLActiveInfo
+getAttachedShaders(program:GLProgram):Array<GLShader>
+getAttribLocation(program:GLProgram, name:String):Int
+getUniform(program:GLProgram, location:GLUniformLocation):Dynamic
+getUniformLocation(program:GLProgram, name:String):GLUniformLocation
+getVertexAttrib(index:Int, pname:Int):Dynamic
+getVertexAttribOffset(index:Int, pname:Int):Int
 
 //shader data upload
 //uniform
+//-unresolved
 uniform1f(location:GLUniformLocation, x:Float):Void
 uniform1fv(location:GLUniformLocation, data:Float32Array):Void
 uniform1i(location:GLUniformLocation, x:Int):Void
@@ -165,29 +193,3 @@ vertexAttrib3fv(indx:Int, data:Float32Array):Void
 vertexAttrib4f(indx:Int, x:Float, y:Float, z:Float, w:Float):Void
 vertexAttrib4fv(indx:Int, data:Float32Array):Void
 vertexAttribPointer(indx:Int, size:Int, type:Int, normalized:Bool, stride:Int, offset:Int):Void
-
-
-//Query state
-// - shader & program state
-getShaderParameter(shader:GLShader, pname:Int):Int
-getShaderPrecisionFormat(shadertype:Int, precisiontype:Int):GLShaderPrecisionFormat
-getShaderSource(shader:GLShader):String
-getShaderInfoLog(shader:GLShader):String
-getProgramParameter(program:GLProgram, pname:Int):Int
-getProgramInfoLog(program:GLProgram):String
-getActiveAttrib(program:GLProgram, index:Int):GLActiveInfo
-getActiveUniform(program:GLProgram, index:Int):GLActiveInfo
-getAttachedShaders(program:GLProgram):Array<GLShader>
-getAttribLocation(program:GLProgram, name:String):Int
-getUniform(program:GLProgram, location:GLUniformLocation):Dynamic
-getUniformLocation(program:GLProgram, name:String):GLUniformLocation
-getVertexAttrib(index:Int, pname:Int):Dynamic
-getVertexAttribOffset(index:Int, pname:Int):Int
-// - texture state
-getTexParameter(target:Int, pname:Int):Dynamic
-// - buffer state
-getBufferParameter(target:Int, pname:Int):Dynamic
-// - framebuffer state
-getFramebufferAttachmentParameter(target:Int, attachment:Int, pname:Int):Dynamic
-// - renderbuffer state
-getRenderbufferParameter(target:Int, pname:Int):Dynamic

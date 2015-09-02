@@ -14,6 +14,28 @@ GLActiveInfo:{
 	type:Int,
 	name:String
 }
+
+
+Interlacing:
+	say we want to interlace position and uv
+	
+	vec3 pos;
+	vec2 uv
+
+	[p p p u u p p p u u ... ]
+	position{
+		offset = 0
+		stride = sizeOf(uv.type)*uv.valuesPerElement + sizeOf(position.type)*position.valuesPerElement
+	}
+	uv{
+		offset = sizeOf(position.type)*position.valuesPerElement
+		stride = sizeOf(uv.type)*uv.valuesPerElement + sizeOf(position.type)*position.valuesPerElement
+	}
+
+Attributes:
+	If it's helpful, we can set the attribute locations manually with
+		bindAttribLocation
+	but in this case you must link the shader AFTER those bindAttribLocation calls
 */
 
 class Shader{
@@ -24,46 +46,50 @@ class Shader{
 		//@!
 	}
 
-	//Shader Tools
-	public function compileShaders(geometryShaderSrc:String, pixelShaderSrc:String):GLProgram{
-		var geometryShader = GL.createShader(GL.VERTEX_SHADER);
-		GL.shaderSource(geometryShader, geometryShaderSrc);
-		GL.compileShader(geometryShader);
-
-		//check for compilation errors
-		if(GL.getShaderParameter(geometryShader, GL.COMPILE_STATUS) == 0){
-			GL.deleteShader(geometryShader);
-			throw 'Geometry shader error: '+GL.getShaderInfoLog(geometryShader);
-		}
-
-		var pixelShader = GL.createShader(GL.FRAGMENT_SHADER);
-		GL.shaderSource(pixelShader, pixelShaderSrc);
-		GL.compileShader(pixelShader);
-
-		//check for compilation errors
-		if(GL.getShaderParameter(pixelShader, GL.COMPILE_STATUS) == 0){
-			GL.deleteShader(pixelShader);
-			throw 'Pixel shader error: '+GL.getShaderInfoLog(pixelShader);
-		}
-
-		var program = GL.createProgram();
-		GL.attachShader(program, geometryShader);
-		GL.attachShader(program, pixelShader);
-		GL.linkProgram(program);
-
-		if(GL.getProgramParameter(program, GL.LINK_STATUS) == 0){
-			GL.detachShader(program, geometryShader);
-			GL.detachShader(program, pixelShader);
-			GL.deleteShader(geometryShader);
-			GL.deleteShader(pixelShader);
-			throw GL.getProgramInfoLog(program);
-		}
-
-		return program;
+	public function initialize():Shader{
+		compileShaders(vertexShader, fragmentShader);
+		return this;
 	}
 
 	public function dispose(){
 		//@!
+	}
+
+	private function compileShaders(vertexShaderSrc:String, fragmentShaderSrc:String):GLProgram{
+		var vertexShader = GL.createShader(GL.VERTEX_SHADER);
+		GL.shaderSource(vertexShader, vertexShaderSrc);
+		GL.compileShader(vertexShader);
+
+		//check for compilation errors
+		if(GL.getShaderParameter(vertexShader, GL.COMPILE_STATUS) == 0){
+			GL.deleteShader(vertexShader);
+			throw 'vertex shader error: '+GL.getShaderInfoLog(vertexShader);
+		}
+
+		var fragmentShader = GL.createShader(GL.FRAGMENT_SHADER);
+		GL.shaderSource(fragmentShader, fragmentShaderSrc);
+		GL.compileShader(fragmentShader);
+
+		//check for compilation errors
+		if(GL.getShaderParameter(fragmentShader, GL.COMPILE_STATUS) == 0){
+			GL.deleteShader(fragmentShader);
+			throw 'fragment shader error: '+GL.getShaderInfoLog(fragmentShader);
+		}
+
+		var program = GL.createProgram();
+		GL.attachShader(program, vertexShader);
+		GL.attachShader(program, fragmentShader);
+		GL.linkProgram(program);
+
+		if(GL.getProgramParameter(program, GL.LINK_STATUS) == 0){
+			GL.detachShader(program, vertexShader);
+			GL.detachShader(program, fragmentShader);
+			GL.deleteShader(vertexShader);
+			GL.deleteShader(fragmentShader);
+			throw GL.getProgramInfoLog(program);
+		}
+
+		return program;
 	}
 
 }

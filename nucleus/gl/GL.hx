@@ -792,6 +792,10 @@ class GL {
 	public static inline var VERTEX_ATTRIB_ARRAY_POINTER        = 0x8645;
 	public static inline var VERTEX_ATTRIB_ARRAY_BUFFER_BINDING = 0x889F;
 
+	/* Read Format */
+    public static inline var IMPLEMENTATION_COLOR_READ_TYPE   = 0x8B9A;
+    public static inline var IMPLEMENTATION_COLOR_READ_FORMAT = 0x8B9B;
+
 	/* Point Size */
 	public static inline var VERTEX_PROGRAM_POINT_SIZE       = 0x8642;
 	public static inline var POINT_SPRITE                    = 0x8861;

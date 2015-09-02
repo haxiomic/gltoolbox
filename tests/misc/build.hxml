@@ -1,6 +1,6 @@
 -main Main
 -cp ./src
--lib gltoolbox
+-lib nucleus
 -js bin/main.js
 -dce full
 -D analyzer
