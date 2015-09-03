@@ -70,13 +70,13 @@ class Main{
 
 		NU.useProgram(testProgram);
 
-		NU.setAttributeBuffer(testProgram.attributes['vertices'], vertices1:FormattedBuffer);{
+		NU.setAttributeBuffer('vertices', vertices1:FormattedBuffer);{
 			// GL.bindBuffer(GL.ARRAY_BUFFER, vertices1.buffer);
 			Buffer.activate(uvs1.buffer);//private api
 			GL.vertexAttribPointer(testProgram.attributes['vertices'], vertices1.size, vertices1.type, vertices1.normalize, vertices1.stride, vertices1.offset);
 		}
 
-		NU.setAttributeBuffer(testProgram.attributes['uvs'], uvs1:FormattedBuffer);{
+		NU.setAttributeBuffer('uvs', uvs1:FormattedBuffer);{
 			//same buffer object!
 			// GL.bindBuffer(GL.ARRAY_BUFFER, uvs1.buffer);
 			Buffer.activate(uvs1.buffer);
@@ -88,7 +88,7 @@ class Main{
 			NU.assignTextureUnit(texture);
 			GL.uniform1i(...);
 		}
-		NU.setUniformVec2Array(testProgram.uniforms['touches'], touches:Array<Vec2>);{
+		NU.setUniformVec2Array('touches', touches:Array<Vec2>);{
 			//copy out array
 			for(t in touches){
 				vec2ArrayTmp[...] = t[0];
@@ -118,11 +118,11 @@ class Main{
 		// ----------------------------- //
 		//in breif:
 		NU.useProgram(testProgram);
-		NU.setAttributeBuffer(testProgram.attributes['vertices'], vertices1);
-		NU.setAttributeBuffer(testProgram.attributes['uvs'], uvs);
-		NU.setUniformVec3(testProgram.uniforms['color'], color1);
-		NU.setUniformTexture(testProgram.uniforms['texture'], texture);
-		NU.setUniformVec2Array(testProgram.uniforms['touches'], touches);
+		NU.setAttributeBuffer('vertices', vertices1);
+		NU.setAttributeBuffer('uvs', uvs);
+		NU.setUniformVec3('color', color1);
+		NU.setUniformTexture('texture', texture);
+		NU.setUniformVec2Array('touches', touches);
 		NU.drawIndexed(indexBuffer, DrawModes.TRIANGLES);
 
 	}
