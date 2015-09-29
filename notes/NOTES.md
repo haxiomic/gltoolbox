@@ -21,18 +21,7 @@
 
 ## Misc Unresolved
 	- names
-		HaxiumNucleus
-		HaxiumRender
-		HaxiumUI
-		glMinimum
-		glNucleus
-	
-		glFoundation
-		glEssentials
-		glCore
-		glBackbone
-		glEssence
-		glCrux
+		gluon
 
 	-	glNucleus //deals with just CPU wrappers for GPU objects
 			gl
