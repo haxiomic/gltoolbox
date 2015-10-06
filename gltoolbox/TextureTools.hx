@@ -1,6 +1,7 @@
 package gltoolbox;
 
 #if snow
+import snow.api.buffers.ArrayBufferView;
 import snow.modules.opengl.GL;
 #elseif lime
 import lime.graphics.opengl.GL;
@@ -16,6 +17,7 @@ typedef TextureParams = {
 	@:optional var wrapS:Int;
 	@:optional var wrapT:Int;
 	@:optional var unpackAlignment:Int;
+	@:optional var webGLFlipY:Bool;
 }
 
 class TextureTools{
@@ -26,7 +28,8 @@ class TextureTools{
 		filter          : GL.NEAREST,
 		wrapS           : GL.CLAMP_TO_EDGE,
 		wrapT           : GL.CLAMP_TO_EDGE,
-		unpackAlignment : 4
+		unpackAlignment : 4,
+		webGLFlipY      : #if js true #else false #end
 	};
 
 	static public inline function createTextureFactory(?params:TextureParams):TextureFactory{
@@ -49,20 +52,14 @@ class TextureTools{
 		});
 	}
 
-	static public function createTexture(width:Int, height:Int, ?params:TextureParams):GLTexture{
+	static public function createTexture(width:Int, height:Int, ?params:TextureParams, data:ArrayBufferView = null):GLTexture{
 		if(params == null) params = {};
+		if(data == null) data = null;//@! work around for WebKit bug in texImage2D (refused to accept undefined)
 
 		//extend default params
 		for(f in Reflect.fields(defaultParams))
 			if(!Reflect.hasField(params, f))
 				Reflect.setField(params, f, Reflect.field(defaultParams, f));
-
-		#if ios //@! temporary test
-		if(dataType == GL.FLOAT){
-			// trace('GL.FLOAT is not supported, changing to half float');
-			dataType = 0x8D61;//GL_HALF_FLOAT_OES
-		}
-		#end
 
 		var texture:GLTexture = GL.createTexture();
 		GL.bindTexture (GL.TEXTURE_2D, texture);
@@ -74,9 +71,10 @@ class TextureTools{
 		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_WRAP_T, params.wrapT);
 
 		GL.pixelStorei(GL.UNPACK_ALIGNMENT, params.unpackAlignment); //see (see http://www.khronos.org/opengles/sdk/docs/man/xhtml/glPixelStorei.xml)
+		GL.pixelStorei(GL.UNPACK_FLIP_Y_WEBGL, (params.webGLFlipY ? 1 : 0));
 
 		//set data
-		GL.texImage2D(GL.TEXTURE_2D, 0, params.channelType, width, height, 0, params.channelType, params.dataType, null);
+		GL.texImage2D(GL.TEXTURE_2D, 0, params.channelType, width, height, 0, params.channelType, params.dataType, data);
 
 		//unbind
 		GL.bindTexture(GL.TEXTURE_2D, null);
