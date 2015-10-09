@@ -1,4 +1,8 @@
 #Immediate Todo
+
+- Should all CPU objects have a .syncGPU() function?
+	and also, each has a property .gpuReference or .gpuObject
+	-> this makes it easy to handle context lost; just go syncGPU on all objects
 - Shaders and Texture classes
 	//can we do shader.uploadUniform('name', value); and have it type select?
 	//or must we do, value.uploadAsUniform(location); ?

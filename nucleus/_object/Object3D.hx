@@ -72,7 +72,6 @@ class Object3D{
 		worldMatrixNeedsUpdate = true;
 	}
 
-
 	//@! todo .clone()
 	public function clone():Object3D{
 		throw 'todo';
