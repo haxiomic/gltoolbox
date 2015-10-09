@@ -1,6 +1,6 @@
 package nucleus.math;
 
-class PowerOf2{
+class POT{
 
 	static public function ceilPowerOf2(v:Float):Int{
 		//http://graphics.stanford.edu/~seander/bithacks.html#RoundUpPowerOf2
@@ -30,6 +30,11 @@ class PowerOf2{
 		var f = floorPowerOf2(v);
 		var c = ceilPowerOf2(v);
 		return Math.abs(v - f) < Math.abs(v - c) ? f : c;
+	}
+
+	static public function isPowerOf2(v:Int):Bool{
+		//http://stackoverflow.com/a/600306
+		return (x != 0) && ((x & (x - 1)) == 0);
 	}
 
 }
