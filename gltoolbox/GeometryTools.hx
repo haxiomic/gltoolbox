@@ -6,7 +6,11 @@ import snow.api.buffers.Float32Array;
 #elseif lime
 import lime.graphics.opengl.GL;
 import lime.graphics.opengl.GLBuffer;
-import lime.utils.Float32Array;
+class Float32Array<T> {
+    public static function fromArray<T>(arr:Array<T>){
+        return new lime.utils.Float32Array(arr);
+    }
+}
 #end
 
 class GeometryTools{
@@ -75,7 +79,7 @@ class GeometryTools{
                 ];
         }
         GL.bindBuffer(GL.ARRAY_BUFFER, quad);
-        GL.bufferData(GL.ARRAY_BUFFER, new Float32Array(vertices), usage);
+        GL.bufferData(GL.ARRAY_BUFFER, Float32Array.fromArray(vertices), usage);
         GL.bindBuffer(GL.ARRAY_BUFFER, null);
         return quad;
     }
@@ -92,7 +96,7 @@ class GeometryTools{
     *   |  '  |     |     |
     *   +--O--+-----+-----+
     */
-    static public function boundaryLinesArray(width:Int, height:Int)return new Float32Array(//OGL centers lines on the boundary between pixels
+    static public function boundaryLinesArray(width:Int, height:Int)return Float32Array.fromArray(//OGL centers lines on the boundary between pixels
         [
             //left
             0.5       , 0,
